@@ -11,9 +11,10 @@
 // Code //
 
 // Attempting to load a shader from a given location on disk.
-//
-// Upon failure it will populate Lentil_Core_Error with the appropriate
-// information.
-GLuint Lentil_loadShader(const char*, Lentil_Core_Error*);
+GLuint Lentil_Reso_loadShader(const char*, Lentil_Core_Error*);
+
+// Attempting to load a shader program from a given location on disk. It scans
+// for shaders at the path + ".vert", ".geom", and ".frag" respective.
+GLuint Lentil_Reso_loadShaderProgram(const char*, Lentil_Core_Error*);
 
 #endif

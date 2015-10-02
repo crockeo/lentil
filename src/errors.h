@@ -8,6 +8,11 @@
 //////////
 // Code //
 
+// Error code definitions.
+const static int Lentil_Core_FILENOTFOUND        = 1;
+const static int Lentil_Core_SHADERCOMPILEFAILED = 2;
+const static int Lentil_Core_PROGRAMLINKFAILED   = 3;
+
 // A struct to contain advanced error handling for function calls.
 typedef struct {
     int code;

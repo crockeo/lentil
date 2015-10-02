@@ -23,6 +23,12 @@ const char* Lentil_Core_errorName(Lentil_Core_Error err) {
     switch (err.code) {
     case 0:
         return "No error";
+    case Lentil_Core_FILENOTFOUND:
+        return "File not found";
+    case Lentil_Core_SHADERCOMPILEFAILED:
+        return "Shader compile failed";
+    case Lentil_Core_PROGRAMLINKFAILED:
+        return "Program link failed";
     default:
         return "Unknown error";
     }

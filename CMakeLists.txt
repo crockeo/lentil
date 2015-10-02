@@ -29,7 +29,8 @@ set(RESO_SOURCES src/res/texture.c
 add_library(lentil-reso ${RESO_SOURCES})
 
 # Core functionality.
-set(CORE_SOURCES src/errors.c)
+set(CORE_SOURCES src/errors.c
+                 src/debug.c)
 
 add_library(lentil-core ${CORE_SOURCES})
 
