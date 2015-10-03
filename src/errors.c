@@ -6,10 +6,7 @@
 // Creating a default non-error Lentil_Core_Error.
 Lentil_Core_Error Lentil_Core_defaultError() {
     Lentil_Core_Error err;
-
-    err.code    = 0;
-    err.message = "";
-
+    err.code = 0;
     return err;
 }
 

@@ -16,7 +16,6 @@ const static int Lentil_Core_PROGRAMLINKFAILED   = 3;
 // A struct to contain advanced error handling for function calls.
 typedef struct {
     int code;
-    const char* message;
 } Lentil_Core_Error;
 
 // Creating a default non-error Lentil_Core_Error.

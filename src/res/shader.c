@@ -12,53 +12,92 @@
 // Code //
 
 // Attempting to load a shader from a given location on disk.
-GLuint Lentil_Reso_loadShader(const char* path, Lentil_Core_Error* pErr) {
-    if (pErr == NULL)
+GLuint Lentil_Reso_loadShader(const char* path, GLenum shaderType, Lentil_Core_Error* pErr) {
+    // Opening a file for the given path.
+    FILE* shaderFile = fopen(path, "r");
+    if (shaderFile == NULL) {
+        pErr->code    = Lentil_Core_FILENOTFOUND;
+
+        if (Lentil_Core_debugLevel(-1) > 0)
+            printf("Failed to open shader %s.\n", path);
+
         return 0;
+    }
 
-    pErr->code    = 1;
-    pErr->message = "not yet implemented.";
+    // Loading the contents of the shaderFile.
+    fseek(shaderFile, 0, SEEK_END);
+    int length = ftell(shaderFile);
+    fseek(shaderFile, 0, SEEK_SET);
 
-    return 0;
+    char* contents = malloc(length);
+    fread(contents, 1, length, shaderFile);
+    fclose(shaderFile);
+
+    // Attempting to create and compile the shader.
+    GLuint shader = glCreateShader(shaderType);
+    glShaderSource(shader, 1, (const GLchar* const*)&contents, NULL);
+    glCompileShader(shader);
+
+    GLint compiled;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+    if (compiled == GL_FALSE) {
+        glDeleteShader(shader);
+        shader = 0;
+
+        if (Lentil_Core_debugLevel(-1) > 0) {
+            GLint length;
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+
+            char* compileLog = malloc(length * sizeof(char));
+            glGetShaderInfoLog(shader, length, NULL, compileLog);
+
+            printf("Failed to compile shader: %s\n", compileLog);
+
+            free(compileLog);
+        }
+
+        pErr->code = Lentil_Core_SHADERCOMPILEFAILED;
+    }
+
+    return shader;
 }
 
 // Attempting to load a shader program from a given location on disk. It scans
 // for shaders at the path + ".vert", ".geom", and ".frag" respective.
 GLuint Lentil_Reso_loadShaderProgram(const char* path, Lentil_Core_Error* pErr) {
-    const char** suffixes = (const char**)malloc(3 * sizeof(const char*));
-    GLuint* shaders = (GLuint*)malloc(3 * sizeof(GLuint));
+    const char** suffixes = malloc(3 * sizeof(const char*));
+    GLenum* shaderTypes = malloc(3 * sizeof(GLenum));
+    GLuint* shaders = malloc(3 * sizeof(GLuint));
+
+    // Populating the array data.
+    shaderTypes[0] = GL_VERTEX_SHADER;
+    shaderTypes[1] = GL_GEOMETRY_SHADER;
+    shaderTypes[2] = GL_FRAGMENT_SHADER;
 
     suffixes[0] = ".vert";
     suffixes[1] = ".geom";
     suffixes[2] = ".frag";
 
     // Loading all of the individual shaders.
-    char* realPath = (char*)malloc((strlen(path) + 6) * sizeof(char));
+    char* realPath = malloc((strlen(path) + 6) * sizeof(char));
     Lentil_Core_Error err;
     for (int i = 0; i < 3; i++) {
-        sprintf("%s%s", realPath, path, suffixes[i]);
+        sprintf(realPath, "%s%s", path, suffixes[i]);
         err = Lentil_Core_defaultError();
 
-        shaders[i] = Lentil_Reso_loadShader(realPath, &err);
+        shaders[i] = Lentil_Reso_loadShader(realPath, shaderTypes[i], &err);
         if (Lentil_Core_isError(err)) {
-            switch (err.code) {
-                case Lentil_Core_FILENOTFOUND:
-                    if (Lentil_Core_debugLevel(-1) > 0)
-                        printf("%s: %s", Lentil_Core_errorName(err), err.message);
+            if (err.code > 0 && err.code != Lentil_Core_FILENOTFOUND) {
+                pErr->code = err.code;
 
-                    break;
-                default:
-                    *pErr = err;
+                printf("Lentil_Core_loadShader error: %s\n", Lentil_Core_errorName(err));
 
-                    free(realPath);
-                    free(suffixes);
+                free(shaderTypes);
+                free(suffixes);
+                free(shaders);
+                free(realPath);
 
-                    for (int j = 0; j < i; i++)
-                        if (shaders[j] > 0)
-                            glDeleteShader(shaders[j]);
-                    free(shaders);
-
-                    return 0;
+                return 0;
             }
         }
     }
@@ -77,7 +116,19 @@ GLuint Lentil_Reso_loadShaderProgram(const char* path, Lentil_Core_Error* pErr) 
     glGetProgramiv(program, GL_LINK_STATUS, &linked);
     if (linked == GL_FALSE) {
         pErr->code    = Lentil_Core_PROGRAMLINKFAILED;
-        pErr->message = "Failed to link shader.";
+
+        if (Lentil_Core_debugLevel(-1) > 0) {
+            GLint length;
+            glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+
+            char* linkLog = malloc(length * sizeof(char));
+            glGetProgramInfoLog(program, length, NULL, linkLog);
+
+            printf("Failed to link shader program: %s\n", linkLog);
+
+            free(linkLog);
+        }
+
 
         glDeleteProgram(program);
         program = 0;
@@ -88,6 +139,7 @@ GLuint Lentil_Reso_loadShaderProgram(const char* path, Lentil_Core_Error* pErr) 
         if (shaders[i] > 0)
             glDeleteShader(shaders[i]);
 
+    free(shaderTypes);
     free(suffixes);
     free(shaders);
 
