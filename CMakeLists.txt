@@ -24,7 +24,8 @@ include_directories(${GLEW_INCLUDE_DIRS}
 # Resource management.
 set(RESO_SOURCES src/res/texture.c
                  src/res/shader.c
-                 src/res/model.c)
+                 src/res/model.c
+                 src/res/file.c)
 
 add_library(lentil-reso ${RESO_SOURCES})
 

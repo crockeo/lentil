@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include "../debug.h"
+#include "file.h"
 
 //////////
 // Code //
@@ -25,12 +26,7 @@ GLuint Lentil_Reso_loadShader(const char* path, GLenum shaderType, Lentil_Core_E
     }
 
     // Loading the contents of the shaderFile.
-    fseek(shaderFile, 0, SEEK_END);
-    int length = ftell(shaderFile);
-    fseek(shaderFile, 0, SEEK_SET);
-
-    char* contents = malloc(length);
-    fread(contents, 1, length, shaderFile);
+    char* contents = Lentil_Reso_loadFileContents(shaderFile, false);
     fclose(shaderFile);
 
     // Attempting to create and compile the shader.
@@ -41,9 +37,6 @@ GLuint Lentil_Reso_loadShader(const char* path, GLenum shaderType, Lentil_Core_E
     GLint compiled;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
     if (compiled == GL_FALSE) {
-        glDeleteShader(shader);
-        shader = 0;
-
         if (Lentil_Core_debugLevel(-1) > 0) {
             GLint length;
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
@@ -57,6 +50,8 @@ GLuint Lentil_Reso_loadShader(const char* path, GLenum shaderType, Lentil_Core_E
         }
 
         pErr->code = Lentil_Core_SHADERCOMPILEFAILED;
+        glDeleteShader(shader);
+        shader = 0;
     }
 
     return shader;
@@ -115,8 +110,6 @@ GLuint Lentil_Reso_loadShaderProgram(const char* path, Lentil_Core_Error* pErr) 
     GLint linked;
     glGetProgramiv(program, GL_LINK_STATUS, &linked);
     if (linked == GL_FALSE) {
-        pErr->code    = Lentil_Core_PROGRAMLINKFAILED;
-
         if (Lentil_Core_debugLevel(-1) > 0) {
             GLint length;
             glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
@@ -129,7 +122,7 @@ GLuint Lentil_Reso_loadShaderProgram(const char* path, Lentil_Core_Error* pErr) 
             free(linkLog);
         }
 
-
+        pErr->code    = Lentil_Core_PROGRAMLINKFAILED;
         glDeleteProgram(program);
         program = 0;
     }
