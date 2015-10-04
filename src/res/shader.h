@@ -1,5 +1,5 @@
-#ifndef _SHADER_H_
-#define _SHADER_H_
+#ifndef _LENTIL_RESO_SHADER_H_
+#define _LENTIL_RESO_SHADER_H_
 
 //////////////
 // Includes //

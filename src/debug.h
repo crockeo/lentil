@@ -1,5 +1,5 @@
-#ifndef _DEBUG_H_
-#define _DEBUG_H_
+#ifndef _LENTIL_CORE_DEBUG_H_
+#define _LENTIL_CORE_DEBUG_H_
 
 //////////////
 // Includes //

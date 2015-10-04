@@ -1,5 +1,5 @@
-#ifndef _ERROR_H_
-#define _ERROR_H_
+#ifndef _LENTIL_CORE_ERRORS_H_
+#define _LENTIL_CORE_ERRORS_H_
 
 //////////////
 // Includes //
