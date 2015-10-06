@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "../debug.h"
+#include "../core/debug.h"
 #include "file.h"
 
 //////////

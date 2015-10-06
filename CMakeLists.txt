@@ -25,16 +25,16 @@ include_directories(${OPENGL_INCLUDE_DIRS}
 # Internal Libraries #
 
 # Resource management.
-set(RESO_SOURCES src/res/texture.c
-                 src/res/shader.c
-                 src/res/model.c
-                 src/res/file.c)
+set(RESO_SOURCES src/reso/texture.c
+                 src/reso/shader.c
+                 src/reso/model.c
+                 src/reso/file.c)
 
 add_library(lentil-reso ${RESO_SOURCES})
 
 # Core functionality.
-set(CORE_SOURCES src/errors.c
-                 src/debug.c)
+set(CORE_SOURCES src/core/errors.c
+                 src/core/debug.c)
 
 add_library(lentil-core ${CORE_SOURCES})
 

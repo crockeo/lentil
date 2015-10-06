@@ -4,9 +4,9 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
-#include "res/texture.h"
-#include "res/shader.h"
-#include "debug.h"
+#include "reso/texture.h"
+#include "reso/shader.h"
+#include "core/debug.h"
 
 //////////
 // Code //

@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include <stdio.h>
 
-#include "../errors.h"
+#include "../core/errors.h"
 
 //////////
 // Code //

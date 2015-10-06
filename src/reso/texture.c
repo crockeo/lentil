@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <png.h>
 
-#include "../debug.h"
+#include "../core/debug.h"
 
 //////////
 // Code //
