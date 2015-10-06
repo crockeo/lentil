@@ -26,6 +26,8 @@ const char* Lentil_Core_errorName(Lentil_Core_Error err) {
         return "Shader compile failed";
     case Lentil_Core_PROGRAMLINKFAILED:
         return "Program link failed";
+    case Lentil_Core_PNGLOADFAILED:
+        return "PNG load failed";
     default:
         return "Unknown error";
     }

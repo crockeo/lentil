@@ -6,7 +6,8 @@ project(lentil)
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/build/")
 set(LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/build/")
 
-add_definitions(-std=c11)
+add_definitions("-Wall")
+add_definitions("-std=c11")
 
 ######################
 # External Libraries #
@@ -41,9 +42,11 @@ set(EXEC_SOURCES src/main.c)
 
 add_executable(lentil ${EXEC_SOURCES})
 
+# Linking external libraries.
 target_link_libraries(lentil ${GLEW_LIBRARY}
                              ${GLFW_LIBRARY}
                              ${PNG_LIBRARY})
 
+# Linking local libraries.
 target_link_libraries(lentil lentil-reso
                              lentil-core)

@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
+#include "res/texture.h"
 #include "res/shader.h"
 #include "debug.h"
 
@@ -38,11 +39,21 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    // Testing some shader loads.
+    // Choosing an appropriate debug level.
     Lentil_Core_debugLevel(3);
 
-    Lentil_Core_Error err = Lentil_Core_defaultError();
-    GLuint program = Lentil_Reso_loadShaderProgram("res/shaders/test", &err);
+    // Testing some shader loads.
+    Lentil_Core_Error shaderErr = Lentil_Core_defaultError();
+    GLuint program = Lentil_Reso_loadShaderProgram("res/shaders/test", &shaderErr);
+
+    Lentil_Core_Error textureErr = Lentil_Core_defaultError();
+    GLuint texture = Lentil_Reso_loadTexture("res/imgs/test.png", &textureErr);
+
+    printf("Shader: %s\n", Lentil_Core_errorName(shaderErr));
+    printf("Texture: %s\n", Lentil_Core_errorName(textureErr));
+
+    glDeleteProgram(program);
+    glDeleteTextures(1, &texture);
 
     // Cleaning up GLFW & OpenGL.
     glfwDestroyWindow(window);
