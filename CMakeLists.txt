@@ -11,11 +11,13 @@ add_definitions("-std=c11")
 
 ######################
 # External Libraries #
+find_package(opengl REQUIRED)
 find_package(glew REQUIRED)
 find_package(glfw REQUIRED)
 find_package(png REQUIRED)
 
-include_directories(${GLEW_INCLUDE_DIRS}
+include_directories(${OPENGL_INCLUDE_DIRS}
+                    ${GLEW_INCLUDE_DIRS}
                     ${GLFW_INCLUDE_DIRS}
                     ${PNG_INCLUDE_DIRS})
 
@@ -43,7 +45,8 @@ set(EXEC_SOURCES src/main.c)
 add_executable(lentil ${EXEC_SOURCES})
 
 # Linking external libraries.
-target_link_libraries(lentil ${GLEW_LIBRARY}
+target_link_libraries(lentil ${OPENGL_LIBRARY}
+                             ${GLEW_LIBRARY}
                              ${GLFW_LIBRARY}
                              ${PNG_LIBRARY})
 

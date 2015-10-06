@@ -49,10 +49,10 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
         return;
     }
 
-    png_infop sInfoPtr = png_create_info_struct(pngPtr);
-    if (sInfoPtr == NULL) {
+    png_infop infoPtr = png_create_info_struct(pngPtr);
+    if (infoPtr == NULL) {
         pErr->code = Lentil_Core_PNGLOADFAILED;
-        png_destroy_read_struct(&pngPtr, &sInfoPtr, NULL);
+        png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
 
         if (Lentil_Core_debugLevel(-1) > 0)
             printf("Could not create either the start or end info structs.\n");
@@ -62,7 +62,7 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
 
     // Setting up libpng.
     if (setjmp(png_jmpbuf(pngPtr))) {
-        png_destroy_read_struct(&pngPtr, &sInfoPtr, NULL);
+        png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
 
         if (Lentil_Core_debugLevel(-1) > 0)
             printf("Unknown libpng error.\n");
@@ -77,10 +77,10 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
     png_uint_32 width, height;
     int bitDepth, colorType;
 
-    png_read_info(pngPtr, sInfoPtr);
+    png_read_info(pngPtr, infoPtr);
     png_get_IHDR(
         pngPtr,
-        sInfoPtr,
+        infoPtr,
         &width,
         &height,
         &bitDepth,
@@ -91,12 +91,12 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
     );
 
     // Allocating space for the png.
-    int rowBytes = png_get_rowbytes(pngPtr, sInfoPtr);
-    png_byte* imgData = malloc(rowBytes * height);
-    png_bytep* rowPointers = malloc(height);
+    int rowBytes = png_get_rowbytes(pngPtr, infoPtr);
+    png_byte* imgData = malloc(rowBytes * height * sizeof(png_byte));
+    png_bytep* rowPointers = malloc(height * sizeof(png_bytep));
 
     if (imgData == NULL || rowPointers == NULL) {
-        png_destroy_read_struct(&pngPtr, &sInfoPtr, NULL);
+        png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
         if (imgData != NULL)
             free(imgData);
         if (rowPointers != NULL)
@@ -110,7 +110,7 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
 
     // Starting to load png data.
     for (int i = 0; i < height; i++)
-        rowPointers[height - 1 - i] = imgData + (i * rowBytes);
+        rowPointers[height - 1 - i] = imgData + i * rowBytes;
     png_read_image(pngPtr, rowPointers);
 
     // Getting the color type of the png.
@@ -128,7 +128,7 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     // Cleaning up and returning.
-    png_destroy_read_struct(&pngPtr, &sInfoPtr, NULL);
+    png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
     free(imgData);
     free(rowPointers);
 }
