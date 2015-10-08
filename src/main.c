@@ -4,9 +4,11 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
+#include "core/debug.h"
+
 #include "reso/texture.h"
 #include "reso/shader.h"
-#include "core/debug.h"
+#include "reso/model.h"
 
 //////////
 // Code //
@@ -42,15 +44,23 @@ int main(int argc, char** argv) {
     // Choosing an appropriate debug level.
     Lentil_Core_debugLevel(3);
 
-    // Testing some shader loads.
+    // Testing a shader load.
     Lentil_Core_Error shaderErr = Lentil_Core_defaultError();
     GLuint program = Lentil_Reso_loadShaderProgram("res/shaders/test", &shaderErr);
 
+    // Testing a texture load.
     Lentil_Core_Error textureErr = Lentil_Core_defaultError();
     GLuint texture = Lentil_Reso_loadTexture("res/imgs/test.png", &textureErr);
 
+    // Testing a model load.
+    Lentil_Core_Error modelErr = Lentil_Core_defaultError();
+    Lentil_Reso_Model* model = Lentil_Reso_createModel();
+    Lentil_Reso_loadModel("res/models/test.obj", "obj", model, &modelErr);
+    Lentil_Reso_destroyModel(model);
+
     printf("Shader: %s\n", Lentil_Core_errorName(shaderErr));
     printf("Texture: %s\n", Lentil_Core_errorName(textureErr));
+    printf("Model: %s\n", Lentil_Core_errorName(modelErr));
 
     glDeleteProgram(program);
     glDeleteTextures(1, &texture);

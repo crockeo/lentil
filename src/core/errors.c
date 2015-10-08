@@ -28,6 +28,10 @@ const char* Lentil_Core_errorName(Lentil_Core_Error err) {
         return "Program link failed";
     case Lentil_Core_PNGLOADFAILED:
         return "PNG load failed";
+    case Lentil_Core_INVALIDMODELFORMAT:
+        return "Invalid model format";
+    case Lentil_Core_MODELLOADFAILED:
+        return "Model load failed";
     default:
         return "Unknown error";
     }
