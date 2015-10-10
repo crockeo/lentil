@@ -6,6 +6,7 @@
 
 #include "core/debug.h"
 
+#include "reso/modelio.h"
 #include "reso/texture.h"
 #include "reso/shader.h"
 #include "reso/model.h"
