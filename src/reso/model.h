@@ -10,6 +10,13 @@
 //////////
 // Code //
 
+// Information to represent a single face on a 
+typedef struct {
+    int vertex;
+    int textureVertex;
+    int normalVertex;
+} Lentil_Reso_Face;
+
 // Information to represent a model resource.
 typedef struct {
     int numVertices;
@@ -20,6 +27,9 @@ typedef struct {
 
     int numNormalVertices;
     float* normalVertices;
+
+    int numFaces;
+    Lentil_Reso_Face* faces;
 } Lentil_Reso_Model;
 
 // Constructing a new Lentil_Reso_Model on the heap.

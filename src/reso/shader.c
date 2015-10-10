@@ -25,8 +25,9 @@ GLuint Lentil_Reso_loadShader(const char* path, GLenum shaderType, Lentil_Core_E
         return 0;
     }
 
-    // Loading the contents of the shaderFile.
-    char* contents = Lentil_Reso_loadFileContents(shaderFile, false);
+    // Loading the contents of the shaderFile.c
+    char* contents;
+    Lentil_Reso_loadFileContents(shaderFile, &contents, false);
     fclose(shaderFile);
 
     // Attempting to create and compile the shader.
