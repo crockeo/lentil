@@ -18,22 +18,23 @@ bool Lentil_Reso_isValidFormat(const char* format) {
     return strcmp(format, "obj") == 0 || strcmp(format, "lent") == 0;
 }
 
+// Attempting to load a single face from a model file.
+void Lentil_Reso_loadFace(FILE* modelFile, Lentil_Reso_Face* face, Lentil_Core_Error* pErr) {
+    Lentil_Reso_consumeLine(modelFile);
+}
+
 // Loading a model from a .obj file.
 void Lentil_Reso_loadModelObj(FILE* modelFile, Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
-    int tokenSize = 4;
+    int tokenSize = 64;
     char* token = malloc(tokenSize * sizeof(char));
 
-    Lentil_Reso_Model lastModel = *model;
     bool hasFace = false;
     while (!Lentil_Reso_loadToken(modelFile, token, tokenSize)) {
         int n;
 
-        if (strcmp(token, "#") == 0)
+        if (strcmp(token, "#") == 0 || strcmp(token, "g") == 0 || strcmp(token, "mtllib") == 0 || strcmp(token, "usemtl")
             Lentil_Reso_consumeLine(modelFile);
-        else if (strcmp(token, "g") == 0) {
-            Lentil_Reso_consumeLine(modelFile);
-            lastModel = *model;
-        } else if (strcmp(token, "v") == 0) {
+        else if (strcmp(token, "v") == 0) {
             float x, y, z, w;
             n = fscanf(modelFile, "%f %f %f %f", &x, &y, &z, &w);
             if (n < 3 || n > 4) {
@@ -47,7 +48,7 @@ void Lentil_Reso_loadModelObj(FILE* modelFile, Lentil_Reso_Model* model, Lentil_
             if (n == 3)
                 w = 1.f;
 
-            // TODO: Insert into model.
+            Lentil_Reso_addPosVertex(model, x, y, z, w);
         } else if (strcmp(token, "vt") == 0) {
             float x, y, w;
             n = fscanf(modelFile, "%f %f %f", &x, &y, &w);
@@ -62,7 +63,7 @@ void Lentil_Reso_loadModelObj(FILE* modelFile, Lentil_Reso_Model* model, Lentil_
             if (n == 2)
                 w = 0;
 
-            // TODO: Insert into model.
+            Lentil_Reso_addTexVertex(model, x, y, w);
         } else if (strcmp(token, "vn") == 0) {
             float x, y, z;
             n = fscanf(modelFile, "%f %f %f", &x, &y, &z);
@@ -74,10 +75,21 @@ void Lentil_Reso_loadModelObj(FILE* modelFile, Lentil_Reso_Model* model, Lentil_
                 return;
             }
 
-            // TODO: Insert into model.
+            Lentil_Reso_addNorVertex(model, x, y, z);
         } else if (strcmp(token, "f") == 0) {
+            Lentil_Core_Error err;
+            Lentil_Reso_Face face;
+            Lentil_Reso_loadFace(modelFile, &face, &err);
+            if (Lentil_Core_isError(err)) {
+                pErr->code = err.code;
+                return;
+            }
 
+            Lentil_Reso_addFace(model, face);
             hasFace = true;
+        } else {
+            if (Lentil_Core_debugLevel(-1) > 0)
+                printf("Unrecognized token in model: %s\n", token);
         }
     }
 
