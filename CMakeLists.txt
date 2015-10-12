@@ -29,7 +29,8 @@ include_directories(${OPENGL_INCLUDE_DIRS}
 # Internal Libraries #
 
 # Resource management.
-set(RESO_SOURCES src/reso/texture.c
+set(RESO_SOURCES src/reso/objloader.c
+                 src/reso/texture.c
                  src/reso/shader.c
                  src/reso/file.c)
 
