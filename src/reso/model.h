@@ -42,4 +42,10 @@ Lentil_Reso_Model* Lentil_Reso_createModel();
 // Freeing up all of the memory from a given model.
 void Lentil_Reso_destroyModel(Lentil_Reso_Model*);
 
+// Adding new values into a model.
+void Lentil_Reso_addPosVertex(Lentil_Reso_Model*, float, float, float, float);
+void Lentil_Reso_addTexVertex(Lentil_Reso_Model*, float, float, float);
+void Lentil_Reso_addNorVertex(Lentil_Reso_Model*, float, float, float);
+void Lentil_Reso_addFace(Lentil_Reso_Model*, Lentil_Reso_Face);
+
 #endif
