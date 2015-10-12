@@ -20,7 +20,7 @@
 // * Materials        (mtllib / usemtl)
 // * Groups           (g)
 // * Faces            (f)
-void Lentil_Reso_Model_loadObj(FILE* file, Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
+void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
     if (file == NULL) {
         if (Lentil_Core_debugLevel(-1) > 0)
             printf("Invalid model file.\n");
@@ -75,7 +75,9 @@ void Lentil_Reso_Model_loadObj(FILE* file, Lentil_Reso_Model* model, Lentil_Core
 
             // TODO: Add normal vertex.
         } else if (strcmp(token, "mtllib") == 0) {
-            Lentil_Reso_consumeLine(file);
+            /*Lentil_Reso_loadToken(file, token, tokenSize);*/
+            /*model->material = Lentil_Reso_loadMaterial(*/
+            /*Lentil_Reso_consumeLine(file);*/
         } else if (strcmp(token, "usemtl") == 0) {
             Lentil_Reso_consumeLine(file);
         } else if (strcmp(token, "g") == 0) {
@@ -85,4 +87,10 @@ void Lentil_Reso_Model_loadObj(FILE* file, Lentil_Reso_Model* model, Lentil_Core
         } else
             Lentil_Reso_consumeLine(file);
     }
+}
+
+// Effectivel the same thing as calling Lentil_Reso_loadObjModel(fopen(path), "r").
+// Refer to the documentation of the above for use.
+void Lentil_Reso_loadObjModelStr(const char* path, Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
+    Lentil_Reso_loadObjModel(fopen(path, "r"), model, pErr);
 }

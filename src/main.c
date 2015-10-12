@@ -6,8 +6,10 @@
 
 #include "core/debug.h"
 
+#include "reso/objloader.h"
 #include "reso/texture.h"
 #include "reso/shader.h"
+#include "reso/model.h"
 
 //////////
 // Code //
@@ -51,8 +53,14 @@ int main(int argc, char** argv) {
     Lentil_Core_Error textureErr = Lentil_Core_defaultError();
     GLuint texture = Lentil_Reso_loadTexture("res/imgs/test.png", &textureErr);
 
+    // Testing a model load.
+    Lentil_Core_Error modelErr = Lentil_Core_defaultError();
+    Lentil_Reso_Model model;
+    Lentil_Reso_loadObjModelStr("res/models/violin_case.obj", &model, &modelErr);
+
     printf("Shader: %s\n", Lentil_Core_errorName(shaderErr));
     printf("Texture: %s\n", Lentil_Core_errorName(textureErr));
+    printf("Model: %s\n", Lentil_Core_errorName(modelErr));
 
     glDeleteProgram(program);
     glDeleteTextures(1, &texture);
