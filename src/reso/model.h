@@ -3,6 +3,8 @@
 
 //////////////
 // Includes //
+#include <stdbool.h>
+
 #include "material.h"
 
 //////////
@@ -11,17 +13,17 @@
 // A single positional vertex.
 typedef struct {
     float x, y, z, w;
-} Lentil_Reso_Model_PosVertex;
+} Lentil_Reso_Model_PVertex;
 
 // A single texture vertex.
 typedef struct {
     float x, y, w;
-} Lentil_Reso_Model_TexVertex;
+} Lentil_Reso_Model_TVertex;
 
 // A single normal vertex.
 typedef struct {
     float x, y, z;
-} Lentil_Reso_Model_NorVertex;
+} Lentil_Reso_Model_NVertex;
 
 // A triad of positional, texture, and normal vertex to be used in face
 // definitions.
@@ -33,30 +35,35 @@ typedef struct {
 typedef struct {
     int length;
     int size;
+
+    int triadsSize, triadsLength;
     Lentil_Reso_Model_Triad* triads;
 } Lentil_Reso_Model_Face;
 
 // A group of faces with a common material.
 typedef struct {
-    const char* name;
-    const char* material;
+    char* name;
+    char* material;
+
+    int facesSize, facesLength;
     Lentil_Reso_Model_Face* faces;
 } Lentil_Reso_Model_Group;
 
 // An entire model composed 
 typedef struct {
     int pVerticesSize, pVerticesLength;
-    Lentil_Reso_Model_PosVertex* pVertices;
+    Lentil_Reso_Model_PVertex* pVertices;
 
     int tVerticesSize, tVerticesLength;
-    Lentil_Reso_Model_TexVertex* tVertices;
+    Lentil_Reso_Model_TVertex* tVertices;
 
     int nVerticesSize, nVerticesLength;
-    Lentil_Reso_Model_NorVertex* nVertices;
+    Lentil_Reso_Model_NVertex* nVertices;
 
     int groupsSize, groupsLength;
     Lentil_Reso_Model_Group* groups;
 
+    bool ownsMaterial;
     Lentil_Reso_Material* material;
 } Lentil_Reso_Model;
 
@@ -65,5 +72,16 @@ Lentil_Reso_Model* Lentil_Reso_Model_new();
 
 // Destroying a model and its associated resources.
 void Lentil_Reso_Model_destroy(Lentil_Reso_Model*);
+
+// Adding vertices.
+void Lentil_Reso_Model_addPVertex(Lentil_Reso_Model*, Lentil_Reso_Model_PVertex);
+void Lentil_Reso_Model_addTVertex(Lentil_Reso_Model*, Lentil_Reso_Model_TVertex);
+void Lentil_Reso_Model_addNVertex(Lentil_Reso_Model*, Lentil_Reso_Model_NVertex);
+
+// Adding a new group.
+void Lentil_Reso_Model_addGroup(Lentil_Reso_Model*, const char*);
+
+// Setting the material of a Lentil_Reso_Model.
+void Lentil_Reso_Model_setMaterial(Lentil_Reso_Model*, Lentil_Reso_Material*, bool);
 
 #endif
