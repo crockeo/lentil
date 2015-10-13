@@ -32,6 +32,7 @@ include_directories(${OPENGL_INCLUDE_DIRS}
 set(RESO_SOURCES src/reso/objloader.c
                  src/reso/texture.c
                  src/reso/shader.c
+                 src/reso/model.c
                  src/reso/file.c)
 
 add_library(lentil-reso ${RESO_SOURCES})

@@ -45,12 +45,25 @@ typedef struct {
 
 // An entire model composed 
 typedef struct {
+    int pVerticesSize, pVerticesLength;
     Lentil_Reso_Model_PosVertex* pVertices;
+
+    int tVerticesSize, tVerticesLength;
     Lentil_Reso_Model_TexVertex* tVertices;
+
+    int nVerticesSize, nVerticesLength;
     Lentil_Reso_Model_NorVertex* nVertices;
 
+    int groupsSize, groupsLength;
     Lentil_Reso_Model_Group* groups;
+
     Lentil_Reso_Material* material;
 } Lentil_Reso_Model;
+
+// Creating and returning a new model.
+Lentil_Reso_Model* Lentil_Reso_Model_new();
+
+// Destroying a model and its associated resources.
+void Lentil_Reso_Model_destroy(Lentil_Reso_Model*);
 
 #endif

@@ -55,8 +55,9 @@ int main(int argc, char** argv) {
 
     // Testing a model load.
     Lentil_Core_Error modelErr = Lentil_Core_defaultError();
-    Lentil_Reso_Model model;
-    Lentil_Reso_loadObjModelStr("res/models/violin_case.obj", &model, &modelErr);
+    Lentil_Reso_Model* model = Lentil_Reso_Model_new();
+    Lentil_Reso_loadObjModelStr("res/models/violin_case.obj", model, &modelErr);
+    Lentil_Reso_Model_destroy(model);
 
     printf("Shader: %s\n", Lentil_Core_errorName(shaderErr));
     printf("Texture: %s\n", Lentil_Core_errorName(textureErr));
