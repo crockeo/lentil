@@ -73,15 +73,4 @@ Lentil_Reso_Model* Lentil_Reso_Model_new();
 // Destroying a model and its associated resources.
 void Lentil_Reso_Model_destroy(Lentil_Reso_Model*);
 
-// Adding vertices.
-void Lentil_Reso_Model_addPVertex(Lentil_Reso_Model*, Lentil_Reso_Model_PVertex);
-void Lentil_Reso_Model_addTVertex(Lentil_Reso_Model*, Lentil_Reso_Model_TVertex);
-void Lentil_Reso_Model_addNVertex(Lentil_Reso_Model*, Lentil_Reso_Model_NVertex);
-
-// Adding a new group.
-void Lentil_Reso_Model_addGroup(Lentil_Reso_Model*, const char*);
-
-// Setting the material of a Lentil_Reso_Model.
-void Lentil_Reso_Model_setMaterial(Lentil_Reso_Model*, Lentil_Reso_Material*, bool);
-
 #endif

@@ -5,11 +5,22 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../core/array.h"
 #include "../core/debug.h"
 #include "file.h"
 
 //////////
 // Code //
+
+// Parsing out a single triad from a given FILE.
+void Lentil_Reso_ObjLoader_loadTriad(FILE* file, Lentil_Reso_Model_Triad* triad, Lentil_Core_Error* pErr) {
+    // TODO: Load a triad.
+}
+
+// Parsing out a single face from a given FILE.
+void Lentil_Reso_ObjLoader_loadFace(FILE* file, Lentil_Reso_Model_Face* face, Lentil_Core_Error *pErr) {
+    // TODO: Load a face.
+}
 
 // Attempting to load a model from Wavefront .obj file. Lentil only supports
 // a subset of .obj files:
@@ -56,7 +67,7 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
             vertex.z = z;
             vertex.w = w;
 
-            Lentil_Reso_Model_addPVertex(model, vertex);
+            Lentil_Core_addElement(model->pVertices, vertex, Lentil_Reso_Model_PVertex);
         } else if (strcmp(token, "vt") == 0) {
             float x, y, w;
             int n = fscanf(file, "%f %f %f", &x, &y, &w);
@@ -78,7 +89,7 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
             vertex.y = y;
             vertex.w = w;
 
-            Lentil_Reso_Model_addTVertex(model, vertex);
+            Lentil_Core_addElement(model->tVertices, vertex, Lentil_Reso_Model_TVertex);
         } else if (strcmp(token, "vn") == 0) {
             float x, y, z;
             int n = fscanf(file, "%f %f %f", &x, &y, &z);
@@ -97,7 +108,7 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
             vertex.y = y;
             vertex.z = z;
 
-            Lentil_Reso_Model_addNVertex(model, vertex);
+            Lentil_Core_addElement(model->nVertices, vertex, Lentil_Reso_Model_NVertex);
         } else if (strcmp(token, "mtllib") == 0) {
             // TODO: Load a .mtl file.
             /*Lentil_Reso_loadToken(file, token, tokenSize);*/
@@ -120,12 +131,31 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
             strncpy(model->groups[currentGroup].material, token, slen);
             model->groups[currentGroup].material[slen + 1] = '\0';
         } else if (strcmp(token, "g") == 0) {
+            // Getting the group name.
             Lentil_Reso_loadToken(file, token, tokenSize);
-            Lentil_Reso_Model_addGroup(model, token);
+
+            // Constructing the group.
+            int slen = strlen(token);
+            Lentil_Reso_Model_Group group;
+
+            group.name = malloc((slen + 1) * sizeof(char));
+            strncpy(group.name, token, slen);
+            group.name[slen] = '\0';
+
+            group.material = NULL;
+
+            // Adding the group.
+            Lentil_Core_addElement(model->groups, group, Lentil_Reso_Model_Group);
             currentGroup++;
         } else if (strcmp(token, "f") == 0) {
-            // TODO: Parse a face.
-            Lentil_Reso_consumeLine(file);
+            Lentil_Reso_Model_Face face;
+            Lentil_Reso_ObjLoader_loadFace(file, &face, pErr);
+            if (Lentil_Core_isError(*pErr)) {
+                free(token);
+                return;
+            }
+
+            Lentil_Core_addElement(model->groups[currentGroup].faces, face, Lentil_Reso_Model_Face);
         } else
             Lentil_Reso_consumeLine(file);
     }
