@@ -28,7 +28,8 @@ void Lentil_Reso_ObjLoader_loadFace(FILE* file, Lentil_Reso_Model_Face* face, Le
 // * Vertices         (v)
 // * Texture vertices (vt)
 // * Normal vertices  (vn)
-// * Materials        (mtllib / usemtl)
+// * Material loading (mtllib)
+// * Material use     (usemtl)
 // * Groups           (g)
 // * Faces            (f)
 void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
