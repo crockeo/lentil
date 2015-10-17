@@ -50,3 +50,31 @@ void Lentil_Reso_Model_destroy(Lentil_Reso_Model* model) {
     // Freeing the pointer to the model itself.
     free(model);
 }
+
+// Printing out all of the data inside of a .obj file.
+void Lentil_Reso_Model_print(Lentil_Reso_Model* model) {
+    printf("Model print:\n");
+
+    // p vertices
+    for (int i = 0; i < model->pVerticesLength; i++)
+        printf(" vp %f %f %f %f\n", model->pVertices[i].x, model->pVertices[i].y, model->pVertices[i].z, model->pVertices[i].w);
+
+    // t vertices
+    for (int i = 0; i < model->tVerticesLength; i++)
+        printf(" vt %f %f %f\n", model->tVertices[i].x, model->tVertices[i].y, model->tVertices[i].w);
+
+    // n vertices
+    for (int i = 0; i < model->nVerticesLength; i++)
+        printf(" vn %f %f %f\n", model->nVertices[i].x, model->nVertices[i].y, model->nVertices[i].z);
+
+    // Printing out the groups.
+    for (int i = 0; i < model->groupsLength; i++) {
+        printf(" g\n Name : %s\n Mater: %s\n Faces:\n", model->groups[i].name, model->groups[i].material);
+        for (int j = 0; j < model->groups[i].facesLength; j++) {
+            printf("   f");
+            for (int k = 0; k < model->groups[i].faces[j].triadsLength; k++)
+                printf("%d/%d/%d ", model->groups[i].faces[j].triads[k].pos, model->groups[i].faces[j].triads[k].tex, model->groups[i].faces[j].triads[k].nor);
+            printf("\n");
+        }
+    }
+}

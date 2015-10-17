@@ -1,5 +1,7 @@
 # WHAT HAPPENS WITH ???
 
+mtllib ./test.mtl
+
 v 0 0 0
 v 0 0 1
 v 0 1 0
@@ -14,4 +16,12 @@ vt 1 0
 vt 1 1
 vt 0 1
 
+vn 0 0 0
+vn 1 0 0
+vn 1 0 1
+vn 1 2 1
+
+g main
+usemtl normal
 f 1/1 5/2 7/3 3/4
+f 2/1 6/2 8/3 4/4

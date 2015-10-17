@@ -73,4 +73,7 @@ Lentil_Reso_Model* Lentil_Reso_Model_new();
 // Destroying a model and its associated resources.
 void Lentil_Reso_Model_destroy(Lentil_Reso_Model*);
 
+// Printing out all of the data inside of a .obj file.
+void Lentil_Reso_Model_print(Lentil_Reso_Model*);
+
 #endif
