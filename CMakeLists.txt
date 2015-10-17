@@ -28,6 +28,17 @@ include_directories(${OPENGL_INCLUDE_DIRS}
 ######################
 # Internal Libraries #
 
+# Core functionality.
+set(CORE_SOURCES src/core/errors.c
+                 src/core/debug.c)
+
+add_library(lentil-core ${CORE_SOURCES})
+
+# Graphical rendering.
+set(REND_SOURCES src/rend/renderer.c)
+
+add_library(lentil-rend ${REND_SOURCES})
+
 # Resource management.
 set(RESO_SOURCES src/reso/objloader.c
                  src/reso/texture.c
@@ -36,12 +47,6 @@ set(RESO_SOURCES src/reso/objloader.c
                  src/reso/file.c)
 
 add_library(lentil-reso ${RESO_SOURCES})
-
-# Core functionality.
-set(CORE_SOURCES src/core/errors.c
-                 src/core/debug.c)
-
-add_library(lentil-core ${CORE_SOURCES})
 
 ##############
 # Executable #
@@ -57,5 +62,6 @@ target_link_libraries(lentil ${OPENGL_LIBRARY}
                              ${PNG_LIBRARY})
 
 # Linking local libraries.
-target_link_libraries(lentil lentil-reso
-                             lentil-core)
+target_link_libraries(lentil lentil-core
+                             lentil-rend
+                             lentil-reso)
