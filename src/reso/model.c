@@ -4,6 +4,7 @@
 // Includes //
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 //////////
 // Code //
@@ -46,7 +47,8 @@ void Lentil_Reso_Model_destroy(Lentil_Reso_Model* model) {
     // Freeing the memory associated with the groups.
     for (int i = 0; i < model->groupsLength; i++) {
         for (int j = 0; j < model->groups[i].facesLength; j++)
-            free(model->groups[j].faces[j].triads);
+            free(model->groups[i].faces[j].triads);
+
         free(model->groups[i].faces);
     }
     free(model->groups);

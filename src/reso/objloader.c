@@ -14,12 +14,49 @@
 
 // Parsing out a single triad from a given FILE.
 void Lentil_Reso_ObjLoader_loadTriad(FILE* file, Lentil_Reso_Model_Triad* triad, Lentil_Core_Error* pErr) {
-    // TODO: Load a triad.
+    // Loading the token from the file.
+    int tokenSize = 64;
+    char* token = malloc(tokenSize * sizeof(char));
+
+    Lentil_Reso_loadToken(file, token, tokenSize);
+
+    // Parsing out the Lentil_Reso_Model_Triad 
+    int pos = -1,
+        tex = -1,
+        nor = -1;
+
+    if (sscanf(token, "%d/%d/%d", &pos, &tex, &nor) == 3) {
+        triad->pos = pos;
+        triad->tex = tex;
+        triad->nor = nor;
+    } else if (sscanf(token, "%d//%d", &pos, &nor) == 2) {
+        triad->pos = pos;
+        triad->tex = -1;
+        triad->nor = nor;
+    } else if (sscanf(token, "%d/%d", &pos, &tex) == 2) {
+        triad->pos = pos;
+        triad->tex = tex;
+        triad->nor = -1;
+    } else if (sscanf(token, "%d", &pos) == 1) {
+        triad->pos = pos;
+        triad->tex = -1;
+        triad->nor = -1;
+    } else {
+        triad->pos = -1;
+        triad->tex = -1;
+        triad->nor = -1;
+    }
 }
 
 // Parsing out a single face from a given FILE.
 void Lentil_Reso_ObjLoader_loadFace(FILE* file, Lentil_Reso_Model_Face* face, Lentil_Core_Error *pErr) {
-    // TODO: Load a face.
+    Lentil_Reso_Model_Triad triad;
+    int c;
+    do {
+        Lentil_Reso_ObjLoader_loadTriad(file, &triad, pErr);
+        Lentil_Core_addElement(face->triads, triad, Lentil_Reso_Model_Triad);
+        c = fgetc(file);
+    } while (c != '\n' && c != '\r');
 }
 
 // Attempting to load a model from Wavefront .obj file. Lentil only supports
@@ -43,9 +80,11 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
 
     int currentGroup = -1,
         tokenSize    = 64;
+    bool stop;
 
     char* token = malloc(tokenSize * sizeof(char));
-    while (Lentil_Reso_loadToken(file, token, tokenSize)) {
+    do {
+        stop = Lentil_Reso_loadToken(file, token, tokenSize);
         if (strcmp(token, "v") == 0) {
             float x, y, z, w;
             int n = fscanf(file, "%f %f %f %f", &x, &y, &z, &w);
@@ -145,11 +184,15 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
 
             group.material = NULL;
 
+            Lentil_Core_initArray(group.faces, Lentil_Reso_Model_Face);
+
             // Adding the group.
             Lentil_Core_addElement(model->groups, group, Lentil_Reso_Model_Group);
             currentGroup++;
         } else if (strcmp(token, "f") == 0) {
             Lentil_Reso_Model_Face face;
+            Lentil_Core_initArray(face.triads, Lentil_Reso_Model_Triad);
+;
             Lentil_Reso_ObjLoader_loadFace(file, &face, pErr);
             if (Lentil_Core_isError(*pErr)) {
                 free(token);
@@ -159,7 +202,7 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
             Lentil_Core_addElement(model->groups[currentGroup].faces, face, Lentil_Reso_Model_Face);
         } else
             Lentil_Reso_consumeLine(file);
-    }
+    } while (!stop);
 }
 
 // Effectivel the same thing as calling Lentil_Reso_loadObjModel(fopen(path), "r").
