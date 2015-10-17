@@ -35,7 +35,7 @@ set(CORE_SOURCES src/core/errors.c
 add_library(lentil-core ${CORE_SOURCES})
 
 # Graphical rendering.
-set(REND_SOURCES src/rend/renderer.c)
+set(REND_SOURCES src/rend/modelutils.c)
 
 add_library(lentil-rend ${REND_SOURCES})
 

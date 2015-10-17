@@ -6,6 +6,8 @@
 
 #include "core/debug.h"
 
+#include "rend/modelutils.h"
+
 #include "reso/objloader.h"
 #include "reso/texture.h"
 #include "reso/shader.h"
@@ -69,6 +71,7 @@ void run(GLFWwindow* window) {
     Lentil_Reso_Model_print(model);
 
     // Running a render loop.
+    Lentil_Core_Error renderErr;
     double lt = 0, ct = 0;
     glfwSetTime(0);
     while (!glfwWindowShouldClose(window)) {
@@ -80,13 +83,14 @@ void run(GLFWwindow* window) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Rendering.
+        Lentil_Rend_renderModel(model, texture, program, &renderErr);
 
         // Finishing up an update / render.
         // TODO: Portable thread sleep across operating system.
         if (ct - lt < 1 / 60.0) { }
 
         glfwSwapBuffers(window);
-        glfwPollEvents();
+        glfwWaitEvents();
     }
 
     // Cleaning up the allocated resources.
