@@ -2,6 +2,8 @@
 
 //////////////
 // Includes //
+#include "../core/array.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -14,22 +16,10 @@ Lentil_Reso_Model* Lentil_Reso_Model_new() {
     Lentil_Reso_Model* model = malloc(sizeof(Lentil_Reso_Model));
 
     // Initializing all of the vertices.
-    model->pVerticesSize = 1;
-    model->pVerticesLength = 0;
-    model->pVertices = malloc(model->pVerticesSize * sizeof(float));
-
-    model->tVerticesSize = 1;
-    model->tVerticesLength = 0;
-    model->tVertices = malloc(model->tVerticesSize * sizeof(float));
-
-    model->nVerticesSize = 1;
-    model->nVerticesLength = 0;
-    model->nVertices = malloc(model->nVerticesSize * sizeof(float));
-
-    // Initializing the groups.
-    model->groupsSize = 1;
-    model->groupsLength = 0;
-    model->groups = malloc(model->groupsSize * sizeof(Lentil_Reso_Model_Group));
+    Lentil_Core_initArray(model->pVertices, Lentil_Reso_Model_PVertex);
+    Lentil_Core_initArray(model->tVertices, Lentil_Reso_Model_TVertex);
+    Lentil_Core_initArray(model->nVertices, Lentil_Reso_Model_NVertex);
+    Lentil_Core_initArray(model->groups, Lentil_Reso_Model_Group);
 
     // Initializing the material.
     model->material = NULL;
