@@ -7,32 +7,36 @@
 //////////
 // Code //
 
-// Filling a VBO with the information from a model.
-void Lentil_Rend_fillVBO(Lentil_Reso_Model* model, GLuint vbo, Lentil_Core_Error* pErr) {
-    int vboSize = 0;
-    float* vs = malloc(vboSize * sizeof(float));
+// Filling a VBO and EBO with the information from a single
+// Lentil_Reso_Model_Group. Returns the EBO size for use in glDrawArrays.
+int Lentil_Rend_fillBuffers(Lentil_Reso_Model_Group* group, GLuint vbo, GLuint ebo, Lentil_Core_Error* pErr) {
+    // Finding the size of the VBO and EBO.
+    int vboSize = 0,
+        eboSize = 0;
 
-    // TODO: Fill vs
+    for (int i = 0; i < group->facesLength; i++) {
+        vboSize +=      group->faces[i].triadsLength;
+        eboSize += 3 * (group->faces[i].triadsLength - 2);
+    }
 
+    // Allocating and filling the respective vertices.
+    float*        vs = malloc(vboSize * sizeof(float));
+    unsigned int* es = malloc(eboSize * sizeof(unsigned int));
+    for (int i = 0; i < group->facesLength; i++) {
+
+    }
+
+    // Filling the buffers.
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, vboSize * sizeof(float), vs, GL_DYNAMIC_DRAW);
-
-    free(vs);
-}
-
-// Filling an EBO with the information from a model. It returns the number of
-// vertices within the EBO.
-int Lentil_Rend_fillEBO(Lentil_Reso_Model* model, GLuint ebo, Lentil_Core_Error* pErr) {
-    int eboSize = 0;
-    unsigned int* vs = malloc(eboSize * sizeof(unsigned int));
-
-    // TODO: Fill vs
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboSize * sizeof(unsigned int), vs, GL_DYNAMIC_DRAW);
 
+    glBufferData(GL_ARRAY_BUFFER, vboSize * sizeof(float), vs, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboSize * sizeof(unsigned int), es, GL_DYNAMIC_DRAW);
+
+    // Freeing data.
     free(vs);
-    
+    free(es);
+
     return eboSize;
 }
 
@@ -47,10 +51,6 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    Lentil_Rend_fillVBO(model, vbo, pErr);
-    int count = Lentil_Rend_fillEBO(model, ebo, pErr);
-    if (Lentil_Core_isError(*pErr))
-        return;
 
     // Binding the shader and the texture.
     glUseProgram(shader);
@@ -68,8 +68,15 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
     glEnableVertexAttribArray(tattr);
     glVertexAttribPointer(tattr, 2, GL_FLOAT, false, 5 * 2, (void*)(2 * sizeof(GL_FLOAT)));
 
-    // Drawing the element.
-    glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, NULL);
+    // Drawing each of the groups.
+    int count;
+    for (int i = 0; i < model->groupsLength; i++) {
+        count = Lentil_Rend_fillBuffers(&model->groups[i], vbo, ebo, pErr);
+        if (Lentil_Core_isError(*pErr))
+            return;
+
+        glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, NULL);
+    }
 
     // Cleaning up the VAO, VBO, and EBO.
     glDeleteVertexArrays(1, &vao);
