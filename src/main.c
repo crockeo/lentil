@@ -74,6 +74,8 @@ void run(GLFWwindow* window) {
     Lentil_Core_Error renderErr;
     double lt = 0, ct = 0;
     glfwSetTime(0);
+
+    glClearColor(0.3, 0.3, 0.3, 1.0);
     while (!glfwWindowShouldClose(window)) {
         // Getting the delta time since the last time the loop ran.
         lt = ct;
