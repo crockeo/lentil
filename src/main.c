@@ -103,7 +103,7 @@ void run(GLFWwindow* window) {
         if (ct - lt < 1 / 60.0) { }
 
         glfwSwapBuffers(window);
-        glfwWaitEvents();
+        glfwPollEvents();
     }
 
     // Cleaning up the allocated resources.

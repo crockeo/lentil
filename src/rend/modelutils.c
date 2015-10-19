@@ -3,7 +3,6 @@
 //////////////
 // Includes //
 #include <stdlib.h>
-#include <stdio.h>
 
 //////////
 // Code //
@@ -45,13 +44,13 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
 
             // Filling the EBO data.
             if (j < model->groups[group].faces[i].triadsLength - 2) {
-                int p = vi / 7;
+                int p = (vi / 7) - 1;
 
                 es[ei    ] = p;
                 es[ei + 1] = p + 1;
                 es[ei + 2] = p + 2;
 
-                ei += 2;
+                ei += 3;
             }
         }
     }
@@ -92,11 +91,11 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
     GLuint pattr, tattr;
     pattr = glGetAttribLocation(shader, "pvert");
     glEnableVertexAttribArray(pattr);
-    glVertexAttribPointer(pattr, 3, GL_FLOAT, false, 5 * 2, 0);
+    glVertexAttribPointer(pattr, 4, GL_FLOAT, false, 7 * sizeof(float), 0);
 
     tattr = glGetAttribLocation(shader, "tvert");
     glEnableVertexAttribArray(tattr);
-    glVertexAttribPointer(tattr, 2, GL_FLOAT, false, 5 * 2, (void*)(2 * sizeof(GL_FLOAT)));
+    glVertexAttribPointer(tattr, 3, GL_FLOAT, false, 7 * sizeof(float), (void*)(4 * sizeof(GL_FLOAT)));
 
     // Drawing each of the groups.
     int count;
