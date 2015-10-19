@@ -44,6 +44,7 @@ GLFWwindow* initialize() {
         return NULL;
     }
 
+    glGetError();
     return window;
 }
 
@@ -73,6 +74,7 @@ void run(GLFWwindow* window) {
     // Running a render loop.
     Lentil_Core_Error renderErr = Lentil_Core_defaultError();
     double lt = 0, ct = 0;
+    GLenum openglError;
     glfwSetTime(0);
 
     glClearColor(0.3, 0.3, 0.3, 1.0);
@@ -92,6 +94,11 @@ void run(GLFWwindow* window) {
         }
 
         // Finishing up an update / render.
+        if (Lentil_Core_debugLevel(-1) > 0) {
+            openglError = glGetError();
+            if (openglError != GL_NO_ERROR)
+                printf("OpenGL Error: %d\n", openglError);
+        }
         // TODO: Portable thread sleep across operating system.
         if (ct - lt < 1 / 60.0) { }
 
