@@ -9,21 +9,50 @@
 
 // Filling a VBO and EBO with the information from a single
 // Lentil_Reso_Model_Group. Returns the EBO size for use in glDrawArrays.
-int Lentil_Rend_fillBuffers(Lentil_Reso_Model_Group* group, GLuint vbo, GLuint ebo, Lentil_Core_Error* pErr) {
+int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLuint ebo, Lentil_Core_Error* pErr) {
     // Finding the size of the VBO and EBO.
     int vboSize = 0,
         eboSize = 0;
 
-    for (int i = 0; i < group->facesLength; i++) {
-        vboSize +=      group->faces[i].triadsLength;
-        eboSize += 3 * (group->faces[i].triadsLength - 2);
+    for (int i = 0; i < model->groups[group].facesLength; i++) {
+        vboSize += 7 *  model->groups[group].faces[i].triadsLength;
+        eboSize += 3 * (model->groups[group].faces[i].triadsLength - 2);
     }
 
     // Allocating and filling the respective vertices.
     float*        vs = malloc(vboSize * sizeof(float));
     unsigned int* es = malloc(eboSize * sizeof(unsigned int));
-    for (int i = 0; i < group->facesLength; i++) {
+    int vi = 0,
+        ei = 0;
 
+    Lentil_Reso_Model_Triad triad;
+    for (int i = 0; i < model->groups[group].facesLength; i++) {
+        for (int j = 0; j < model->groups[group].faces[i].triadsLength; j++) {
+            // Filling the VBO data.
+            triad = model->groups[group].faces[i].triads[j];
+
+            vs[vi    ] = model->pVertices[triad.pos - 1].x;
+            vs[vi + 1] = model->pVertices[triad.pos - 1].y;
+            vs[vi + 2] = model->pVertices[triad.pos - 1].z;
+            vs[vi + 3] = model->pVertices[triad.pos - 1].w;
+
+            vs[vi + 4] = model->tVertices[triad.pos - 1].x;
+            vs[vi + 5] = model->tVertices[triad.pos - 1].y;
+            vs[vi + 6] = model->tVertices[triad.pos - 1].w;
+
+            vi += 7;
+
+            // Filling the EBO data.
+            if (j < model->groups[group].faces[i].triadsLength - 2) {
+                int p = vi / 7;
+
+                es[ei    ] = p;
+                es[ei + 1] = p + 1;
+                es[ei + 2] = p + 2;
+
+                ei += 2;
+            }
+        }
     }
 
     // Filling the buffers.
@@ -71,7 +100,7 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
     // Drawing each of the groups.
     int count;
     for (int i = 0; i < model->groupsLength; i++) {
-        count = Lentil_Rend_fillBuffers(&model->groups[i], vbo, ebo, pErr);
+        count = Lentil_Rend_fillBuffers(model, i, vbo, ebo, pErr);
         if (Lentil_Core_isError(*pErr))
             return;
 

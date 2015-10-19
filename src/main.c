@@ -71,7 +71,7 @@ void run(GLFWwindow* window) {
     Lentil_Reso_Model_print(model);
 
     // Running a render loop.
-    Lentil_Core_Error renderErr;
+    Lentil_Core_Error renderErr = Lentil_Core_defaultError();
     double lt = 0, ct = 0;
     glfwSetTime(0);
 
@@ -86,6 +86,10 @@ void run(GLFWwindow* window) {
 
         // Rendering.
         Lentil_Rend_renderModel(model, texture, program, &renderErr);
+        if (Lentil_Core_isError(renderErr)) {
+            printf("Render: %s\n", Lentil_Core_errorName(renderErr));
+            break;
+        }
 
         // Finishing up an update / render.
         // TODO: Portable thread sleep across operating system.
