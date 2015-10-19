@@ -3,6 +3,7 @@
 //////////////
 // Includes //
 #include <stdlib.h>
+#include <stdio.h>
 
 //////////
 // Code //
@@ -36,9 +37,9 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
             vs[vi + 2] = model->pVertices[triad.pos - 1].z;
             vs[vi + 3] = model->pVertices[triad.pos - 1].w;
 
-            vs[vi + 4] = model->tVertices[triad.pos - 1].x;
-            vs[vi + 5] = model->tVertices[triad.pos - 1].y;
-            vs[vi + 6] = model->tVertices[triad.pos - 1].w;
+            vs[vi + 4] = model->tVertices[triad.tex - 1].x;
+            vs[vi + 5] = model->tVertices[triad.tex - 1].y;
+            vs[vi + 6] = model->tVertices[triad.tex - 1].w;
 
             vi += 7;
 
