@@ -114,19 +114,28 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
     png_read_image(pngPtr, rowPointers);
 
     // Getting the color type of the png.
-    GLenum glColorType;
-    if (colorType == PNG_COLOR_TYPE_RGB_ALPHA)
-        glColorType = GL_RGBA;
-    else
-        glColorType = GL_RGB;
+    bool alpha = colorType = PNG_COLOR_TYPE_RGB_ALPHA;
 
     // Filling the texture with actual image data.
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, glColorType, width, height, 0, glColorType, GL_UNSIGNED_BYTE, imgData);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexImage2D(
+        GL_TEXTURE_2D,
+        0,
+        alpha ? GL_RGBA8 : GL_RGB8,
+        width,
+        height,
+        0,
+        alpha ? GL_RGBA : GL_RGB,
+        GL_UNSIGNED_BYTE,
+        imgData
+    );
 
     // Cleaning up and returning.
     png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
