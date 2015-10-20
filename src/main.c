@@ -49,7 +49,7 @@ GLFWwindow* initialize() {
 }
 
 // Running the game with the created GLFWwindow.
-void run(GLFWwindow* window) {
+void run(GLFWwindow* window, const char* modelLoc) {
     // Choosing an appropriate debug level.
     Lentil_Core_debugLevel(3);
 
@@ -64,7 +64,7 @@ void run(GLFWwindow* window) {
     // Testing a model load.
     Lentil_Core_Error modelErr = Lentil_Core_defaultError();
     Lentil_Reso_Model* model = Lentil_Reso_Model_new();
-    Lentil_Reso_loadObjModelStr("res/models/test.obj", model, &modelErr);
+    Lentil_Reso_loadObjModelStr(modelLoc, model, &modelErr);
 
     if (Lentil_Core_isError(shaderErr))
         printf("Shader: %s\n", Lentil_Core_errorName(shaderErr));
@@ -100,8 +100,10 @@ void run(GLFWwindow* window) {
         // Finishing up an update / render.
         if (Lentil_Core_debugLevel(-1) > 0) {
             openglError = glGetError();
-            if (openglError != GL_NO_ERROR)
+            if (openglError != GL_NO_ERROR) {
                 printf("OpenGL Error: %d\n", openglError);
+                break;
+            }
         }
         // TODO: Portable thread sleep across operating system.
         if (ct - lt < 1 / 60.0) { }
@@ -127,7 +129,11 @@ int main(int argc, char** argv) {
     GLFWwindow* window = initialize();
     if (window == NULL)
         return 1;
-    run(window);
+
+    if (argc > 1)
+        run(window, argv[1]);
+    else
+        run(window, "res/models/test.obj");
     destroy(window);
 
     return 0;

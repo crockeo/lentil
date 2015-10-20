@@ -88,8 +88,12 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
     // Binding the texture.
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(glGetUniformLocation(shader, "tex"), 0);
     glBindFragDataLocation(shader, 0, "out_color");
+
+    // Setting the scale and texture location.
+    glUniform2f(glGetUniformLocation(shader, "window_size"), 640, 480);
+    glUniform1f(glGetUniformLocation(shader, "scale"), 0.5);
+    glUniform1i(glGetUniformLocation(shader, "tex"), 0);
 
     // Binding the positional and vertex positions.
     GLuint pattr, tattr;
@@ -99,7 +103,7 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
 
     tattr = glGetAttribLocation(shader, "tvert");
     glEnableVertexAttribArray(tattr);
-    glVertexAttribPointer(tattr, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(4 * sizeof(GL_FLOAT)));
+    glVertexAttribPointer(tattr, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(4 * sizeof(float)));
 
     // Drawing each of the groups.
     int count;
