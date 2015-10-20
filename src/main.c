@@ -66,10 +66,14 @@ void run(GLFWwindow* window) {
     Lentil_Reso_Model* model = Lentil_Reso_Model_new();
     Lentil_Reso_loadObjModelStr("res/models/test.obj", model, &modelErr);
 
-    printf("Shader: %s\n", Lentil_Core_errorName(shaderErr));
-    printf("Texture: %s\n", Lentil_Core_errorName(textureErr));
-    printf("Model: %s\n", Lentil_Core_errorName(modelErr));
-    Lentil_Reso_Model_print(model);
+    if (Lentil_Core_isError(shaderErr))
+        printf("Shader: %s\n", Lentil_Core_errorName(shaderErr));
+
+    if (Lentil_Core_isError(textureErr))
+        printf("Texture: %s\n", Lentil_Core_errorName(textureErr));
+
+    if (Lentil_Core_isError(modelErr))
+        printf("Model: %s\n", Lentil_Core_errorName(modelErr));
 
     // Running a render loop.
     Lentil_Core_Error renderErr = Lentil_Core_defaultError();
