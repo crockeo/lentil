@@ -59,7 +59,7 @@ void run(GLFWwindow* window) {
 
     // Testing a texture load.
     Lentil_Core_Error textureErr = Lentil_Core_defaultError();
-    GLuint texture = Lentil_Reso_loadTexture("res/imgs/test.png", &textureErr);
+    GLuint texture = Lentil_Reso_loadTexture("res/imgs/salmon.png", &textureErr);
 
     // Testing a model load.
     Lentil_Core_Error modelErr = Lentil_Core_defaultError();

@@ -3,6 +3,7 @@
 //////////////
 // Includes //
 #include <stdlib.h>
+#include <stdio.h>
 
 //////////
 // Code //
@@ -40,6 +41,14 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
             vs[vi + 5] = model->tVertices[triad.tex - 1].y;
             vs[vi + 6] = model->tVertices[triad.tex - 1].w;
 
+            for (int i = vi; i < vi + 7; i++) {
+                if (vs[i] >= 0)
+                    printf(" %f ", vs[i]);
+                else
+                    printf("%f ", vs[i]);
+            }
+            printf("\n");
+
             vi += 7;
 
             // Filling the EBO data.
@@ -54,6 +63,8 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
             }
         }
     }
+
+    printf("---\n");
 
     // Filling the buffers.
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -71,7 +82,7 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
 
 // Rendering a model with a given texture and a given shader.
 void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint shader, Lentil_Core_Error* pErr) {
-    // Creating and filling the VAO, VBO, and EBO.
+    // Creating the VAO, VBO, and EBO.
     GLuint vao, vbo, ebo;
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -81,10 +92,13 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
-    // Binding the shader and the texture.
+    // Binding the shader.
     glUseProgram(shader);
+
+    // Binding the texture.
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(glGetUniformLocation(shader, "tex"), 0);
     glBindFragDataLocation(shader, 0, "out_color");
 
     // Binding the positional and vertex positions.
@@ -104,7 +118,12 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
         if (Lentil_Core_isError(*pErr))
             return;
 
-        glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, NULL);
+        glDrawElements(
+            GL_TRIANGLES,
+            count,
+            GL_UNSIGNED_INT,
+            (void*)0
+        );
     }
 
     // Cleaning up the VAO, VBO, and EBO.
