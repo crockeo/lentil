@@ -3,8 +3,8 @@
 //////////////
 // Includes //
 #include <stdlib.h>
-#include <stdio.h>
 
+#include <stdio.h>
 //////////
 // Code //
 
@@ -41,14 +41,6 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
             vs[vi + 5] = model->tVertices[triad.tex - 1].y;
             vs[vi + 6] = model->tVertices[triad.tex - 1].w;
 
-            for (int i = vi; i < vi + 7; i++) {
-                if (vs[i] >= 0)
-                    printf(" %f ", vs[i]);
-                else
-                    printf("%f ", vs[i]);
-            }
-            printf("\n");
-
             vi += 7;
 
             // Filling the EBO data.
@@ -63,8 +55,6 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
             }
         }
     }
-
-    printf("---\n");
 
     // Filling the buffers.
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -105,11 +95,11 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
     GLuint pattr, tattr;
     pattr = glGetAttribLocation(shader, "pvert");
     glEnableVertexAttribArray(pattr);
-    glVertexAttribPointer(pattr, 4, GL_FLOAT, false, 7 * sizeof(float), 0);
+    glVertexAttribPointer(pattr, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
 
     tattr = glGetAttribLocation(shader, "tvert");
     glEnableVertexAttribArray(tattr);
-    glVertexAttribPointer(tattr, 3, GL_FLOAT, false, 7 * sizeof(float), (void*)(4 * sizeof(GL_FLOAT)));
+    glVertexAttribPointer(tattr, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(4 * sizeof(GL_FLOAT)));
 
     // Drawing each of the groups.
     int count;

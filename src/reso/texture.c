@@ -62,6 +62,7 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
 
     // Setting up libpng.
     if (setjmp(png_jmpbuf(pngPtr))) {
+        pErr->code = Lentil_Core_PNGLOADFAILED;
         png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
 
         if (Lentil_Core_debugLevel(-1) > 0)
@@ -102,6 +103,8 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
         if (rowPointers != NULL)
             free(rowPointers);
 
+        pErr->code = Lentil_Core_PNGLOADFAILED;
+
         if (Lentil_Core_debugLevel(-1) > 0)
             printf("Could not allocate image data.\n");
 
@@ -114,16 +117,11 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
     png_read_image(pngPtr, rowPointers);
 
     // Getting the color type of the png.
-    bool alpha = colorType = PNG_COLOR_TYPE_RGB_ALPHA;
+    bool alpha = colorType == PNG_COLOR_TYPE_RGB_ALPHA;
 
     // Filling the texture with actual image data.
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glTexImage2D(
         GL_TEXTURE_2D,
@@ -136,6 +134,17 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
         GL_UNSIGNED_BYTE,
         imgData
     );
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLuint err = glGetError();
+    if (err != GL_NO_ERROR) {
+        pErr->code = Lentil_Core_PNGLOADFAILED;
+
+        if (Lentil_Core_debugLevel(-1) > 0)
+            printf("OpenGL error: %d\n", err);
+    }
 
     // Cleaning up and returning.
     png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
@@ -171,6 +180,8 @@ GLuint Lentil_Reso_loadTexture(const char* path, Lentil_Core_Error* pErr) {
         glDeleteTextures(1, &texture);
         return 0;
     }
+
+    fclose(texFile);
 
     return 0;
 }
