@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "core/debug.h"
+#include "core/sleep.h"
 
 #include "rend/modelutils.h"
 
@@ -107,8 +108,10 @@ void run(GLFWwindow* window, const char* modelLoc) {
                 break;
             }
         }
-        // TODO: Portable thread sleep across operating system.
-        if (ct - lt < 1 / 60.0) { }
+
+        double dt = ct - lt;
+        if (dt < 1 / 60.0)
+            Lentil_Core_sleep(1 / 60.0 - dt);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

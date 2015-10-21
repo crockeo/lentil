@@ -30,7 +30,8 @@ include_directories(${OPENGL_INCLUDE_DIRS}
 
 # Core functionality.
 set(CORE_SOURCES src/core/errors.c
-                 src/core/debug.c)
+                 src/core/debug.c
+                 src/core/sleep.c)
 
 add_library(lentil-core ${CORE_SOURCES})
 
