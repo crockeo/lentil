@@ -3,8 +3,10 @@
 //////////////
 // Includes //
 #include <stdlib.h>
-
 #include <stdio.h>
+
+#include "../core/debug.h"
+
 //////////
 // Code //
 
@@ -70,18 +72,53 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
     return eboSize;
 }
 
-// Rendering a model with a given texture and a given shader.
-void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint shader, Lentil_Core_Error* pErr) {
-    // Creating the VAO, VBO, and EBO.
-    GLuint vao, vbo, ebo;
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-    glGenBuffers(1, &ebo);
+// Constructing a new Lentil_Rend_ModelRender from a Lentil_Reso_Model.
+Lentil_Rend_ModelRender* Lentil_Rend_ModelRender_new(Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
+    Lentil_Rend_ModelRender* mr = malloc(sizeof(Lentil_Rend_ModelRender));
 
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    mr->count = model->groupsLength;
+    mr->vLengths = malloc(mr->count * sizeof(int));
 
+    mr->vaos = malloc(mr->count * sizeof(GLuint));
+    mr->vbos = malloc(mr->count * sizeof(GLuint));
+    mr->ebos = malloc(mr->count * sizeof(GLuint));
+
+    glGenVertexArrays(mr->count, mr->vaos);
+    glGenBuffers(mr->count, mr->vbos);
+    glGenBuffers(mr->count, mr->ebos);
+
+    for (int i = 0; i < model->groupsLength; i++) {
+        glBindVertexArray(mr->vaos[i]);
+        mr->vLengths[i] = Lentil_Rend_fillBuffers(model, i, mr->vbos[i], mr->ebos[i], pErr);
+
+        if (Lentil_Core_isError(*pErr)) {
+            if (Lentil_Core_debugLevel(-1) > 0)
+                printf("Failed to fill buffers for model index %d.\n", i);
+
+            Lentil_Rend_ModelRender_destroy(mr);
+
+            return NULL;
+        }
+    }
+
+    return mr;
+}
+
+// Destroying the data contained in a Lentil_Rend_ModelRender.
+void Lentil_Rend_ModelRender_destroy(Lentil_Rend_ModelRender* mr) {
+    glDeleteVertexArrays(mr->count, mr->vaos);
+    glDeleteBuffers(mr->count, mr->vbos);
+    glDeleteBuffers(mr->count, mr->ebos);
+
+    free(mr->vLengths);
+    free(mr->vaos);
+    free(mr->vbos);
+    free(mr->ebos);
+    free(mr);
+}
+
+// Performing a render upon the data contained within a Lentil_Rend_ModelRender.
+void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender* mr, GLuint texture, GLuint shader) {
     // Binding the shader.
     glUseProgram(shader);
 
@@ -95,33 +132,26 @@ void Lentil_Rend_renderModel(Lentil_Reso_Model* model, GLuint texture, GLuint sh
     glUniform1f(glGetUniformLocation(shader, "scale"), 0.5);
     glUniform1i(glGetUniformLocation(shader, "tex"), 0);
 
-    // Binding the positional and vertex positions.
+    // Iterating through the (array) buffer objects and performing renders.
     GLuint pattr, tattr;
-    pattr = glGetAttribLocation(shader, "pvert");
-    glEnableVertexAttribArray(pattr);
-    glVertexAttribPointer(pattr, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
+    for (int i = 0; i < mr->count; i++) {
+        glBindVertexArray(mr->vaos[i]);
+        glBindBuffer(GL_ARRAY_BUFFER, mr->vbos[i]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mr->ebos[i]);
 
-    tattr = glGetAttribLocation(shader, "tvert");
-    glEnableVertexAttribArray(tattr);
-    glVertexAttribPointer(tattr, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(4 * sizeof(float)));
+        pattr = glGetAttribLocation(shader, "pvert");
+        glEnableVertexAttribArray(pattr);
+        glVertexAttribPointer(pattr, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
 
-    // Drawing each of the groups.
-    int count;
-    for (int i = 0; i < model->groupsLength; i++) {
-        count = Lentil_Rend_fillBuffers(model, i, vbo, ebo, pErr);
-        if (Lentil_Core_isError(*pErr))
-            return;
+        tattr = glGetAttribLocation(shader, "tvert");
+        glEnableVertexAttribArray(tattr);
+        glVertexAttribPointer(tattr, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(4 * sizeof(float)));
 
         glDrawElements(
             GL_TRIANGLES,
-            count,
+            mr->vLengths[i],
             GL_UNSIGNED_INT,
             (void*)0
         );
     }
-
-    // Cleaning up the VAO, VBO, and EBO.
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
-    glDeleteBuffers(1, &ebo);
 }

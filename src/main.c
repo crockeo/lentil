@@ -66,6 +66,10 @@ void run(GLFWwindow* window, const char* modelLoc) {
     Lentil_Reso_Model* model = Lentil_Reso_Model_new();
     Lentil_Reso_loadObjModelStr(modelLoc, model, &modelErr);
 
+    // Testing a model render.
+    Lentil_Core_Error mrErr = Lentil_Core_defaultError();
+    Lentil_Rend_ModelRender* mr = Lentil_Rend_ModelRender_new(model, &mrErr);
+
     if (Lentil_Core_isError(shaderErr))
         printf("Shader: %s\n", Lentil_Core_errorName(shaderErr));
 
@@ -75,8 +79,10 @@ void run(GLFWwindow* window, const char* modelLoc) {
     if (Lentil_Core_isError(modelErr))
         printf("Model: %s\n", Lentil_Core_errorName(modelErr));
 
+    if (Lentil_Core_isError(mrErr))
+        printf("Model Render: %s\n", Lentil_Core_errorName(mrErr));
+
     // Running a render loop.
-    Lentil_Core_Error renderErr = Lentil_Core_defaultError();
     double lt = 0, ct = 0;
     GLenum openglError;
     glfwSetTime(0);
@@ -91,11 +97,7 @@ void run(GLFWwindow* window, const char* modelLoc) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Rendering.
-        Lentil_Rend_renderModel(model, texture, program, &renderErr);
-        if (Lentil_Core_isError(renderErr)) {
-            printf("Render: %s\n", Lentil_Core_errorName(renderErr));
-            break;
-        }
+        Lentil_Rend_ModelRender_render(mr, texture, program);
 
         // Finishing up an update / render.
         if (Lentil_Core_debugLevel(-1) > 0) {
@@ -116,6 +118,7 @@ void run(GLFWwindow* window, const char* modelLoc) {
     glDeleteProgram(program);
     glDeleteTextures(1, &texture);
     Lentil_Reso_Model_destroy(model);
+    Lentil_Rend_ModelRender_destroy(mr);
 }
 
 // Cleaning up the engine after it has finished running.
