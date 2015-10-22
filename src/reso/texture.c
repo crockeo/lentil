@@ -13,6 +13,34 @@
 
 #define PNG_HEADER_SIZE 8
 
+// Printing out a texture of a given width and height.
+void Lentil_Reso_printTexture(GLuint tex, bool alpha, int width, int height) {
+    png_byte* data = malloc(width * height * (alpha ? 4 : 3) * sizeof(png_byte));
+
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glGetTexImage(
+        GL_TEXTURE_2D,
+        0,
+        alpha ? GL_RGBA : GL_RGB,
+        GL_UNSIGNED_BYTE,
+        data
+    );
+
+    for (int row = 0; row < height; row++) {
+        for (int col = 0; col < width; col++) {
+            int i = row * width + col;
+            if (alpha)
+                printf("(%u %u %u %u) ", data[i], data[i + 1], data[i + 2], data[i + 3]);
+            else
+                printf("(%u %u %u) ", data[i], data[i + 1], data[i + 2]);
+        }
+
+        printf("\n");
+    }
+
+    free(data);
+}
+
 // Populating a given texture (represented as a GLuint) with some PNG data
 // (represented by a FILE pointer).
 void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Error* pErr) {
@@ -123,8 +151,8 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 

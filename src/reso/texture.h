@@ -11,6 +11,9 @@
 //////////
 // Code //
 
+// Printing out a texture of a given width and height.
+void Lentil_Reso_printTexture(GLuint, bool, int, int);
+
 // Populating a given texture (represented as a GLuint) with some PNG data
 // (represented by a FILE pointer).
 void Lentil_Reso_populateTexture(FILE*, GLuint, Lentil_Core_Error*);
