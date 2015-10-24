@@ -8,8 +8,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/build/")
 set(LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/build/")
 
-add_definitions("-Wall")
-add_definitions("-std=c11")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall")
 
 ######################
 # External Libraries #
