@@ -16,7 +16,6 @@ add_definitions("-std=c11")
 find_package(opengl REQUIRED)
 find_package(glew REQUIRED)
 find_package(glfw REQUIRED)
-find_package(gsl REQUIRED)
 find_package(png REQUIRED)
 
 include_directories(${OPENGL_INCLUDE_DIRS}
