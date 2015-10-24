@@ -12,10 +12,10 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall")
 
 ######################
 # External Libraries #
-find_package(opengl REQUIRED)
-find_package(glew REQUIRED)
-find_package(glfw REQUIRED)
-find_package(png REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(GLFW REQUIRED)
+find_package(PNG REQUIRED)
 
 include_directories(${OPENGL_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_DIRS}
