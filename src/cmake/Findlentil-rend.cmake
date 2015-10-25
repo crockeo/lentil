@@ -19,14 +19,17 @@ find_library(LENTIL-REND_LIBRARY
 )
 
 # Finding its dependencies.
+find_package(lentil-core REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
-set(LENTIL-REND_INCLUDE_DIRS ${LENTIL-REND_INCLUDE_DIR}
+set(LENTIL-REND_INCLUDE_DIRS ${LENTIL-CORE_INCLUDE_DIR}
+                             ${LENTIL-REND_INCLUDE_DIR}
                              ${OPENGL_INCLUDE_DIRS}
                              ${GLEW_INCLUDE_DIRS})
 
-set(LENTIL-REND_LIBRARIES ${LENTIL-REND_LIBRARY}
+set(LENTIL-REND_LIBRARIES ${LENTIL-CORE_LIBRARIES}
+                          ${LENTIL-REND_LIBRARY}
                           ${OPENGL_LIBRARIES}
                           ${GLEW_LIBRARIES})
 
