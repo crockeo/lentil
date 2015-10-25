@@ -4,15 +4,9 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
-#include "core/debug.h"
-#include "core/sleep.h"
-
-#include "rend/modelutils.h"
-
-#include "reso/objloader.h"
-#include "reso/texture.h"
-#include "reso/shader.h"
-#include "reso/model.h"
+#include "core.h"
+#include "rend.h"
+#include "reso.h"
 
 //////////
 // Code //
