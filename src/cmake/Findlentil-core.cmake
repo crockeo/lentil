@@ -13,14 +13,11 @@ find_path(LENTIL-CORE_INCLUDE_DIRS lentil/core.h
 find_library(LENTIL-CORE_LIBRARIES
   NAMES lentil-core
   PATHS /usr/local
-  PATH_SUFFIXES lib64
+  PATH_SUFFIXES lib/static
                 lib
-                a
 )
-
-# Finding its dependencies.
 
 # Making sure we have everything. 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(GLFW REQUIRED_VARS LENTIL-CORE_INCLUDE_DIRS
-                                                     LENTIL-CORE_LIBRARIES)
+find_package_handle_standard_args(LENTIL-CORE REQUIRED_VARS LENTIL-CORE_INCLUDE_DIRS
+                                                            LENTIL-CORE_LIBRARIES)

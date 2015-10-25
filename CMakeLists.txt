@@ -30,12 +30,17 @@ set(CORE_SOURCES src/lentil/core/errors.c
                  src/lentil/core/debug.c
                  src/lentil/core/sleep.c)
 
-add_library(lentil-core ${CORE_SOURCES})
+add_library(lentil-core SHARED ${CORE_SOURCES})
 
 # Graphical rendering.
 set(REND_SOURCES src/lentil/rend/modelutils.c)
 
-add_library(lentil-rend ${REND_SOURCES})
+add_library(lentil-rend SHARED ${REND_SOURCES})
+
+target_link_libraries(lentil-rend lentil-core
+                                  ${OPENGL_LIBRARIES}
+                                  ${GLEW_LIBRARIES}
+                                  ${PNG_LIBRARIES})
 
 # Resource management.
 set(RESO_SOURCES src/lentil/reso/objloader.c
@@ -44,7 +49,11 @@ set(RESO_SOURCES src/lentil/reso/objloader.c
                  src/lentil/reso/model.c
                  src/lentil/reso/file.c)
 
-add_library(lentil-reso ${RESO_SOURCES})
+add_library(lentil-reso SHARED ${RESO_SOURCES})
+target_link_libraries(lentil-reso lentil-core
+                                  ${OPENGL_LIBRARIES}
+                                  ${GLEW_LIBRARIES}
+                                  ${PNG_LIBRARIES})
 
 ##############
 # Executable #
@@ -53,10 +62,10 @@ set(EXEC_SOURCES src/lentil/main.c)
 add_executable(lentil ${EXEC_SOURCES})
 
 # Linking external libraries.
-target_link_libraries(lentil ${OPENGL_LIBRARY}
-                             ${GLEW_LIBRARY}
-                             ${GLFW_LIBRARY}
-                             ${PNG_LIBRARY})
+target_link_libraries(lentil ${OPENGL_LIBRARIES}
+                             ${GLEW_LIBRARIES}
+                             ${GLFW_LIBRARIES}
+                             ${PNG_LIBRARIES})
 
 # Linking local libraries.
 target_link_libraries(lentil lentil-core

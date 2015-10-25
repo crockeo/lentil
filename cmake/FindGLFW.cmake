@@ -5,7 +5,7 @@
 #   A cmake file to locate headers & library files for OpenGL.
 
 # Finding the include directories.
-find_path(GLFW_INCLUDE_DIR GLFW/glfw3.h
+find_path(GLFW_INCLUDE_DIRS GLFW/glfw3.h
   PATHS /usr/local/include
         /usr/X11/include
         /usr/include
@@ -25,5 +25,5 @@ find_library(GLFW_LIBRARIES
 
 # Making sure we have GLFW.
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(GLFW REQUIRED_VARS GLFW_INCLUDE_DIR
-                                                     GLFW_LIBRARY)
+find_package_handle_standard_args(GLFW REQUIRED_VARS GLFW_INCLUDE_DIRS
+                                                     GLFW_LIBRARIES)
