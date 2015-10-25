@@ -26,29 +26,29 @@ include_directories(${OPENGL_INCLUDE_DIRS}
 # Internal Libraries #
 
 # Core functionality.
-set(CORE_SOURCES src/core/errors.c
-                 src/core/debug.c
-                 src/core/sleep.c)
+set(CORE_SOURCES src/lentil/core/errors.c
+                 src/lentil/core/debug.c
+                 src/lentil/core/sleep.c)
 
 add_library(lentil-core ${CORE_SOURCES})
 
 # Graphical rendering.
-set(REND_SOURCES src/rend/modelutils.c)
+set(REND_SOURCES src/lentil/rend/modelutils.c)
 
 add_library(lentil-rend ${REND_SOURCES})
 
 # Resource management.
-set(RESO_SOURCES src/reso/objloader.c
-                 src/reso/texture.c
-                 src/reso/shader.c
-                 src/reso/model.c
-                 src/reso/file.c)
+set(RESO_SOURCES src/lentil/reso/objloader.c
+                 src/lentil/reso/texture.c
+                 src/lentil/reso/shader.c
+                 src/lentil/reso/model.c
+                 src/lentil/reso/file.c)
 
 add_library(lentil-reso ${RESO_SOURCES})
 
 ##############
 # Executable #
-set(EXEC_SOURCES src/main.c)
+set(EXEC_SOURCES src/lentil/main.c)
 
 add_executable(lentil ${EXEC_SOURCES})
 
