@@ -62,3 +62,21 @@ target_link_libraries(lentil ${OPENGL_LIBRARY}
 target_link_libraries(lentil lentil-core
                              lentil-rend
                              lentil-reso)
+
+################
+# Installation #
+
+install(TARGETS lentil-core
+                lentil-rend
+                lentil-reso
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static)
+
+install(DIRECTORY src/
+        DESTINATION include
+        FILES_MATCHING PATTERN *.h)
+
+install(FILES src/cmake/Findlentil-core.cmake
+              src/cmake/Findlentil-rend.cmake
+              src/cmake/Findlentil-reso.cmake
+        DESTINATION "${CMAKE_ROOT}/Modules")
