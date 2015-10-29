@@ -9,7 +9,7 @@
 
 if [ -f install_manifest.txt ]; then
     while read p; do
-        if [ -f "$" ]; then
+        if [ -f "$p" ]; then
             if [ "$1" = "verbose" ]; then
                 echo "Removing: $p"
             fi
