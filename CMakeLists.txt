@@ -78,11 +78,10 @@ target_link_libraries(lentil lentil-core
 install(TARGETS lentil-core
                 lentil-rend
                 lentil-reso
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib/static)
+        LIBRARY DESTINATION lib)
 
-install(DIRECTORY src/
-        DESTINATION include
+install(DIRECTORY src/lentil/
+        DESTINATION include/lentil
         FILES_MATCHING PATTERN *.h)
 
 install(FILES src/cmake/Findlentil-core.cmake
