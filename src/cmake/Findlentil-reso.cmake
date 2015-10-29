@@ -37,5 +37,5 @@ set(LENTIL-RESO_LIBRARIES ${LENTIL-CORE_LIBRARIES}
 
 # Making sure we have everything. 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LENTIL-RESO REQUIRED_VARS LENTIL-RESO_INCLUDE_DIR
-                                                            LENTIL-RESO_LIBRARY)
+find_package_handle_standard_args(lentil-reso REQUIRED_VARS LENTIL-RESO_LIBRARY
+                                                            LENTIL-RESO_INCLUDE_DIR)

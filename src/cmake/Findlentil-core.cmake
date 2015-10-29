@@ -19,5 +19,5 @@ find_library(LENTIL-CORE_LIBRARIES
 
 # Making sure we have everything. 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LENTIL-CORE REQUIRED_VARS LENTIL-CORE_INCLUDE_DIRS
-                                                            LENTIL-CORE_LIBRARIES)
+find_package_handle_standard_args(lentil-core REQUIRED_VARS LENTIL-CORE_LIBRARIES
+                                                            LENTIL-CORE_INCLUDE_DIRS)
