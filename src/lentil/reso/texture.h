@@ -11,6 +11,10 @@
 //////////
 // Code //
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Printing out a texture of a given width and height.
 void Lentil_Reso_printTexture(GLuint, bool, int, int);
 
@@ -22,5 +26,9 @@ void Lentil_Reso_populateTexture(FILE*, GLuint, Lentil_Core_Error*);
 //
 // The texture must be in a .png format.
 GLuint Lentil_Reso_loadTexture(const char*, Lentil_Core_Error*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

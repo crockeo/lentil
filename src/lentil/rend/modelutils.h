@@ -11,6 +11,10 @@
 //////////
 // Code //
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Filling a VBO and EBO with the information from a single
 // Lentil_Reso_Model_Group.
 int Lentil_Rend_fillBuffers(Lentil_Reso_Model*, int, GLuint, GLuint, Lentil_Core_Error*);
@@ -34,5 +38,9 @@ void Lentil_Rend_ModelRender_destroy(Lentil_Rend_ModelRender*);
 
 // Performing a render upon the data contained within a Lentil_Rend_ModelRender.
 void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender*, GLuint, GLuint);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

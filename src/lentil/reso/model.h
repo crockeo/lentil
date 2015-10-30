@@ -10,6 +10,10 @@
 //////////
 // Code //
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // A single positional vertex.
 typedef struct {
     float x, y, z, w;
@@ -75,5 +79,9 @@ void Lentil_Reso_Model_destroy(Lentil_Reso_Model*);
 
 // Printing out all of the data inside of a .obj file.
 void Lentil_Reso_Model_print(Lentil_Reso_Model*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

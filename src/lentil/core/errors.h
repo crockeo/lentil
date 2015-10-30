@@ -8,6 +8,10 @@
 //////////
 // Code //
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Error code definitions.
 const static int Lentil_Core_FILENOTFOUND        = 1;
 const static int Lentil_Core_SHADERCOMPILEFAILED = 2;
@@ -29,5 +33,9 @@ bool Lentil_Core_isError(Lentil_Core_Error);
 
 // Getting the name of a given error from its error code.
 const char* Lentil_Core_errorName(Lentil_Core_Error);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

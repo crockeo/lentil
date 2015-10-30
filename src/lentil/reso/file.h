@@ -11,6 +11,10 @@
 //////////
 // Code //
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Loading the entire contents of a file. It mallocs memory into the char*
 // located in the char** provided into the function.
 //
@@ -27,5 +31,9 @@ void Lentil_Reso_consumeLine(FILE*);
 //
 // Returns true when an EOF has been encountered.
 bool Lentil_Reso_loadToken(FILE*, char*, int);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

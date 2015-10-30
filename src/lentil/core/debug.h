@@ -8,6 +8,10 @@
 //////////
 // Code //
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Sets & gets the debugging level.
 //
 // If level < 0, it solely returns the current debugging level. 
@@ -28,5 +32,9 @@
 //   3 = costly debugging information (slow - information about specific
 //       renders, render call amounts, etc. etc.)
 int Lentil_Core_debugLevel(int);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
