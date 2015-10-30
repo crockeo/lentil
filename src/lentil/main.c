@@ -13,7 +13,7 @@
 
 // Initializing the game.
 GLFWwindow* initialize() {
-    // Initializing GLFW & OpenGL.
+    // Initializing GLFW.
     if (!glfwInit()) {
         printf("Failed to initialize GLFW.\n");
         return NULL;
@@ -33,11 +33,23 @@ GLFWwindow* initialize() {
     }
     glfwMakeContextCurrent(window);
 
+    // Initializing OpenGL.
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         glfwTerminate();
         return NULL;
     }
+
+    // Setting up OpenGL.
+    glClearColor(0.3, 0.3, 0.3, 0.0);
+
+    glEnable(GL_ALPHA_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+
+    glAlphaFunc(GL_NEVER, 0.0);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
+    glDepthFunc(GL_LEQUAL);
 
     glGetError();
     return window;
@@ -82,7 +94,6 @@ void run(GLFWwindow* window, const char* modelLoc) {
     GLenum openglError;
     glfwSetTime(0);
 
-    glClearColor(0.3, 0.3, 0.3, 1.0);
     while (!glfwWindowShouldClose(window)) {
         // Getting the delta time since the last time the loop ran.
         lt = ct;

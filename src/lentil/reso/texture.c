@@ -83,7 +83,7 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
         png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
 
         if (Lentil_Core_debugLevel(-1) > 0)
-            printf("Could not create either the start or end info structs.\n");
+            printf("Could not create either the start info structs.\n");
 
         return;
     }
@@ -118,6 +118,8 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
         NULL,
         NULL
     );
+
+    png_read_update_info(pngPtr, infoPtr);
 
     // Allocating space for the png.
     int rowBytes = png_get_rowbytes(pngPtr, infoPtr);
@@ -215,7 +217,5 @@ GLuint Lentil_Reso_loadTexture(const char* path, Lentil_Core_Error* pErr) {
         return 0;
     }
 
-    fclose(texFile);
-
-    return 0;
+    return texture;
 }
