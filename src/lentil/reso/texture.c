@@ -147,6 +147,10 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
     // Getting the color type of the png.
     bool alpha = colorType == PNG_COLOR_TYPE_RGB_ALPHA;
 
+    // Cleaning up OpenGL errors to make sure we don't get any from other parts
+    // of the application.
+    glGetError();
+
     // Filling the texture with actual image data.
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
