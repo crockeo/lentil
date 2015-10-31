@@ -11,6 +11,15 @@
 //////////
 // Code //
 
+// The speed of rotational acceleration.
+const double ROT_ACCEL    = 10.0;
+const double MIN_VELOCITY =  0.3;
+
+// Checking if a value is within some margin of another value.
+bool within(double value, double target, double margin) {
+    return value > target - margin && value < target + margin;
+}
+
 // Initializing the game.
 GLFWwindow* initialize() {
     // Initializing GLFW.
@@ -66,7 +75,7 @@ void run(GLFWwindow* window, const char* modelLoc) {
 
     // Testing a texture load.
     Lentil_Core_Error textureErr = Lentil_Core_defaultError();
-    GLuint texture = Lentil_Reso_loadTexture("res/imgs/salmon.png", &textureErr);
+    GLuint texture = Lentil_Reso_loadTexture("res/imgs/gradient.png", &textureErr);
 
     // Testing a model load.
     Lentil_Core_Error modelErr = Lentil_Core_defaultError();
@@ -94,6 +103,9 @@ void run(GLFWwindow* window, const char* modelLoc) {
     GLenum openglError;
     glfwSetTime(0);
 
+    double xrot = 0, yrot = 0;
+    double xvel = 0, yvel = 0;
+
     while (!glfwWindowShouldClose(window)) {
         // Getting the delta time since the last time the loop ran.
         lt = ct;
@@ -105,6 +117,55 @@ void run(GLFWwindow* window, const char* modelLoc) {
         // Rendering.
         Lentil_Rend_ModelRender_render(mr, texture, program);
 
+        // Updating the velocity & rotation.
+        double dt = ct - lt;
+        bool l, r, u, d;
+
+        l = glfwGetKey(window, GLFW_KEY_A);
+        r = glfwGetKey(window, GLFW_KEY_D);
+        u = glfwGetKey(window, GLFW_KEY_W);
+        d = glfwGetKey(window, GLFW_KEY_S);
+
+        if (!l && !r) {
+            if (within(xvel, 0, MIN_VELOCITY))
+                xvel = 0;
+            else if (xvel < 0)
+                xvel += ROT_ACCEL * dt;
+            else if (xvel > 0)
+                xvel -= ROT_ACCEL * dt;
+        } else {
+            if (l)
+                xvel -= ROT_ACCEL * dt;
+            if (r)
+                xvel += ROT_ACCEL * dt;
+        }
+
+        if (!u && !d) {
+            if (within(yvel, 0, MIN_VELOCITY))
+                yvel = 0;
+            else if (yvel < 0)
+                yvel += ROT_ACCEL * dt;
+            else if (yvel > 0)
+                yvel -= ROT_ACCEL * dt;
+        } else {
+            if (u)
+                yvel -= ROT_ACCEL * dt;
+            if (d)
+                yvel += ROT_ACCEL * dt;
+        }
+
+        xrot += xvel * dt;
+        while (xrot < 0)
+            xrot += 360;
+        while (xrot > 360)
+            xrot -= 360;
+
+        yrot += yvel * dt;
+        while (yrot < 0)
+            yrot += 360;
+        while (yrot > 360)
+            yrot -= 360;
+
         // Finishing up an update / render.
         if (Lentil_Core_debugLevel(-1) > 0) {
             openglError = glGetError();
@@ -114,7 +175,6 @@ void run(GLFWwindow* window, const char* modelLoc) {
             }
         }
 
-        double dt = ct - lt;
         if (dt < 1 / 60.0)
             Lentil_Core_sleep(1 / 60.0 - dt);
 
