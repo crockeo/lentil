@@ -12,7 +12,7 @@
 // Code //
 
 // The speed of rotational acceleration.
-const double ROT_ACCEL    = 10.0;
+const double ROT_ACCEL    = 50.0;
 const double MIN_VELOCITY =  0.3;
 
 // Checking if a value is within some margin of another value.
@@ -115,7 +115,7 @@ void run(GLFWwindow* window, const char* modelLoc) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Rendering.
-        Lentil_Rend_ModelRender_render(mr, texture, program);
+        Lentil_Rend_ModelRender_renderRot(mr, texture, program, xrot, yrot);
 
         // Updating the velocity & rotation.
         double dt = ct - lt;

@@ -22,6 +22,8 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model*, int, GLuint, GLuint, Lentil_Core
 // A type to store the relevant bindings to vertex arrays / buffers for a given
 // model render.
 typedef struct Lentil_Rend_ModelRender {
+    float* cameraMatrix;
+
     int count;
     int* vLengths;
 
@@ -38,6 +40,9 @@ void Lentil_Rend_ModelRender_destroy(Lentil_Rend_ModelRender*);
 
 // Performing a render upon the data contained within a Lentil_Rend_ModelRender.
 void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender*, GLuint, GLuint);
+
+// Updating the rotation and then performing a render.
+void Lentil_Rend_ModelRender_renderRot(Lentil_Rend_ModelRender*, GLuint, GLuint, float, float);
 
 #ifdef __cplusplus
 }

@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "../core/debug.h"
+#include "matrixgen.h"
 
 //////////
 // Code //
@@ -66,6 +67,8 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
 Lentil_Rend_ModelRender* Lentil_Rend_ModelRender_new(Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
     Lentil_Rend_ModelRender* mr = malloc(sizeof(Lentil_Rend_ModelRender));
 
+    mr->cameraMatrix = malloc(9 * sizeof(float));
+
     mr->count = model->groupsLength;
     mr->vLengths = malloc(mr->count * sizeof(int));
 
@@ -100,6 +103,7 @@ void Lentil_Rend_ModelRender_destroy(Lentil_Rend_ModelRender* mr) {
     glDeleteBuffers(mr->count, mr->vbos);
     glDeleteBuffers(mr->count, mr->ebos);
 
+    free(mr->cameraMatrix);
     free(mr->vLengths);
     free(mr->vaos);
     free(mr->vbos);
@@ -118,6 +122,7 @@ void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender* mr, GLuint texture,
     glBindFragDataLocation(shader, 0, "out_color");
 
     // Setting the scale and texture location.
+    glUniformMatrix3fv(glGetUniformLocation(shader, "camera_matrix"), 1, false, mr->cameraMatrix);
     glUniform2f(glGetUniformLocation(shader, "window_size"), 640, 480);
     glUniform1f(glGetUniformLocation(shader, "scale"), 0.5);
     glUniform1i(glGetUniformLocation(shader, "tex"), 0);
@@ -144,4 +149,10 @@ void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender* mr, GLuint texture,
             (void*)0
         );
     }
+}
+
+// Updating the rotation and then performing a render.
+void Lentil_Rend_ModelRender_renderRot(Lentil_Rend_ModelRender* mr, GLuint texture, GLuint shader, float xrot, float yrot) {
+    Lentil_Rend_fillMatrix(mr->cameraMatrix, xrot, yrot);
+    Lentil_Rend_ModelRender_render(mr, texture, shader);
 }

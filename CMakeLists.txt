@@ -33,7 +33,8 @@ set(CORE_SOURCES src/lentil/core/errors.c
 add_library(lentil-core SHARED ${CORE_SOURCES})
 
 # Graphical rendering.
-set(REND_SOURCES src/lentil/rend/modelutils.c)
+set(REND_SOURCES src/lentil/rend/modelutils.c
+                 src/lentil/rend/matrixgen.c)
 
 add_library(lentil-rend SHARED ${REND_SOURCES})
 
