@@ -17,7 +17,9 @@
 // That is to say, we're rotating along the 2D plane defined along (x, z), and
 // the 2D plane along (y, z).
 void Lentil_Rend_fillMatrix(float* matrix, float xrot, float yrot) {
+    // TODO: Find out how to do a x-axis rotation and a y-axis rotation?
+
     matrix[0] =  acos(xrot); matrix[1] =        0.0; matrix[2] =  asin(xrot);
     matrix[3] =         0.0; matrix[4] = acos(yrot); matrix[5] = -asin(yrot);
-    matrix[6] = -asin(xrot); matrix[7] = asin(yrot); matrix[8] =  acos(xrot);
+    matrix[6] = -asin(xrot); matrix[7] = asin(yrot); matrix[8] =  acos(xrot) * acos(yrot);
 }
