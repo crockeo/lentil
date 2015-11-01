@@ -13,8 +13,9 @@
 // Code //
 
 // The speed of rotational acceleration.
-const double ROT_ACCEL    = 50.0;
-const double MIN_VELOCITY =  0.3;
+const double MAX_SPEED    = 500.0;
+const double ROT_ACCEL    = 250.0;
+const double MIN_VELOCITY =   0.3;
 
 // Checking if a value is within some margin of another value.
 bool within(double value, double target, double margin) {
@@ -154,6 +155,17 @@ void run(GLFWwindow* window, Lentil_ResConfig cfg) {
             if (d)
                 yvel += ROT_ACCEL * dt;
         }
+
+        // Capping the velocity at a maximum speed.
+        if (xvel < -MAX_SPEED)
+            xvel = -MAX_SPEED;
+        if (xvel >  MAX_SPEED)
+            xvel =  MAX_SPEED;
+
+        if (yvel < -MAX_SPEED)
+            yvel = -MAX_SPEED;
+        if (yvel >  MAX_SPEED)
+            yvel =  MAX_SPEED;
 
         xrot += xvel * dt;
         while (xrot < 0)
