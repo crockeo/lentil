@@ -1,6 +1,8 @@
 #version 330
 
-uniform mat3 camera_matrix;
+#define M_PI 3.14159
+
+uniform vec2 camera_rotation;
 uniform vec2 window_size;
 uniform float scale;
 
@@ -8,6 +10,30 @@ in vec4 pvert;
 in vec3 tvert;
 
 out vec2 p_tvert;
+
+// Generating the matrix to rotate around the y axis.
+mat4 y_matrix(float rot) {
+    float rrot = rot / (180 / M_PI);
+
+    return mat4(
+         cos(rrot), 0, sin(rrot), 0,
+                 0, 1, 0,         0,
+        -sin(rrot), 0, cos(rrot), 0,
+                 0, 0, 0,         1
+    );
+}
+
+// Generating the matrix to rotate around the x axis.
+mat4 x_matrix(float rot) {
+    float rrot = rot / (180 / M_PI);
+
+    return mat4(
+        1, 0,         0,          0,
+        0, cos(rrot), -sin(rrot), 0,
+        0, sin(rrot), cos(rrot),  0,
+        0, 0,         0,          1
+    );
+}
 
 void main() {
     vec4 tpos = vec4(
@@ -17,7 +43,8 @@ void main() {
         1 / scale
     );
 
-    tpos = vec4(tpos.xyz * camera_matrix, tpos.w);
+    tpos *= y_matrix(camera_rotation.x);
+    tpos *= x_matrix(camera_rotation.y);
     gl_Position = tpos;
 
     p_tvert = tvert.xy;

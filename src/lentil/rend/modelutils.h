@@ -22,7 +22,7 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model*, int, GLuint, GLuint, Lentil_Core
 // A type to store the relevant bindings to vertex arrays / buffers for a given
 // model render.
 typedef struct Lentil_Rend_ModelRender {
-    float* cameraMatrix;
+    float xrot, yrot;
 
     int count;
     int* vLengths;
