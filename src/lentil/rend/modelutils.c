@@ -19,7 +19,7 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
 
     for (int i = 0; i < model->groups[group].facesLength; i++) {
         vboSize += 7 *  model->groups[group].faces[i].triadsLength;
-        eboSize +=      model->groups[group].faces[i].triadsLength;
+        eboSize += 3 * (model->groups[group].faces[i].triadsLength - 1);
     }
 
     // Allocating and filling the respective vertices.
@@ -44,7 +44,14 @@ int Lentil_Rend_fillBuffers(Lentil_Reso_Model* model, int group, GLuint vbo, GLu
             vs[vi + 6] = model->tVertices[triad.tex - 1].w;
 
             vi += 7;
-            es[ei++] = (vi / 7) - 1;
+
+            if (j < model->groups[group].faces[i].triadsLength - 2) {
+                es[ei    ] = (vi / 7) - 1;
+                es[ei + 1] = (vi / 7);
+                es[ei + 2] = (vi / 7) + 1;
+
+                ei += 3;
+            }
         }
     }
 
@@ -142,7 +149,7 @@ void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender* mr, GLuint texture,
         glVertexAttribPointer(tattr, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(4 * sizeof(float)));
 
         glDrawElements(
-            GL_TRIANGLE_STRIP,
+            GL_TRIANGLES,
             mr->vLengths[i],
             GL_UNSIGNED_INT,
             (void*)0

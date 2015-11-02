@@ -43,8 +43,13 @@ void main() {
         1 / scale
     );
 
+    // Rotating the matrix.
     tpos *= y_matrix(camera_rotation.x);
     tpos *= x_matrix(camera_rotation.y);
+
+    // Setting perspective scaling.
+    tpos.w = 2 + tpos.z;
+
     gl_Position = tpos;
 
     p_tvert = tvert.xy;
