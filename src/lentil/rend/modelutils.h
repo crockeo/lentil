@@ -15,10 +15,6 @@
 extern "C" {
 #endif
 
-// Filling a VBO and EBO with the information from a single
-// Lentil_Reso_Model_Group.
-int Lentil_Rend_fillBuffers(Lentil_Reso_Model*, int, GLuint, GLuint, Lentil_Core_Error*);
-
 // A type to store the relevant bindings to vertex arrays / buffers for a given
 // model render.
 typedef struct Lentil_Rend_ModelRender {
