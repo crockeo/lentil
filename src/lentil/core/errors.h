@@ -19,6 +19,7 @@ const static int Lentil_Core_PROGRAMLINKFAILED   = 3;
 const static int Lentil_Core_PNGLOADFAILED       = 4;
 const static int Lentil_Core_INVALIDMODELFORMAT  = 5;
 const static int Lentil_Core_MODELLOADFAILED     = 6;
+const static int Lentil_Core_GAMECREATIONFAILED  = 7;
 
 // A struct to contain advanced error handling for function calls.
 typedef struct {

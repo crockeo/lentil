@@ -32,6 +32,8 @@ const char* Lentil_Core_errorName(Lentil_Core_Error err) {
         return "Invalid model format";
     case Lentil_Core_MODELLOADFAILED:
         return "Model load failed";
+    case Lentil_Core_GAMECREATIONFAILED:
+        return "Game creation failed";
     default:
         return "Unknown error";
     }
