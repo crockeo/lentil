@@ -7,20 +7,6 @@
 //////////
 // Code //
 
-/*
-    // Filling the buffers.
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-
-
-    // Freeing data.
-    free(vs);
-    free(es);
-
-    return eboSize;
-}
-*/
-
 // Using a Lentil_Rend_Model to fill a VAO's VBO and EBO with the appropriate
 // vertices. The choice of buffer use is defined by the GLenum.
 //
