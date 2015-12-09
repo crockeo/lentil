@@ -59,7 +59,6 @@ target_link_libraries(lentil-reso lentil-core
 ##############
 # Executable #
 set(EXEC_SOURCES src/lentil/flags.c
-                 src/lentil/game.c
                  src/lentil/main.c)
 
 add_executable(lentil ${EXEC_SOURCES})
