@@ -1,9 +1,19 @@
 # lentil
 
-*lentil* is an asset management system written in C for use with OpenGL. It
-handles the loading of textures, shaders, models, and materials. For a game
-engine look at [curry](http://github.com/crockeo/curry) instead, which uses this
-for its asset loading.
+*lentil* is a graphical toolkit written in C for use with OpenGL. It is *not* a
+game engine, but instead a toolkit one can use to ease the development of game
+engines.
+
+### Features
+
+#### Assets
+
+* Texture loading (.png)
+* Model loading (.obj, .lnt)
+* Shader loading (GLSL shaders)
+* Material loading (.mtl, .lnt)
+
+...
 
 ### Installation
 
