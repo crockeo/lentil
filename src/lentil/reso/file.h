@@ -32,6 +32,13 @@ void Lentil_Reso_consumeLine(FILE*);
 // Returns true when an EOF has been encountered.
 bool Lentil_Reso_loadToken(FILE*, char*, int);
 
+// IO on a file in a concise form.
+void Lentil_Reso_saveInt(FILE*, int);
+void Lentil_Reso_loadInt(FILE*, int*);
+
+void Lentil_Reso_saveFloat(FILE*, float);
+void Lentil_Reso_loadFloat(FILE*, float*);
+
 #ifdef __cplusplus
 }
 #endif

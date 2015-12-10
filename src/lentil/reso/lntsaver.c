@@ -3,6 +3,7 @@
 //////////////
 // Includes //
 #include "../core/debug.h"
+#include "file.h"
 
 //////////
 // Code //
@@ -20,7 +21,55 @@ void Lentil_Reso_saveLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
         return;
     }
 
-    // TODO: Save the model.
+    // Writing the groups length.
+    Lentil_Reso_saveInt(file, model->groupsLength);
+
+    // Writing the faces lengths.
+    for (int i = 0; i < model->groupsLength; i++)
+        Lentil_Reso_saveInt(file, model->groups[i].facesLength);
+
+    // Writing the triads lengths.
+    for (int i = 0; i < model->groupsLength; i++)
+        for (int j = 0; j < model->groups[i].facesLength; j++)
+            Lentil_Reso_saveInt(file, model->groups[i].faces[j].triadsLength);
+
+    // Writing out the vertices lengths.
+    Lentil_Reso_saveInt(file, model->pVerticesLength);
+    Lentil_Reso_saveInt(file, model->tVerticesLength);
+    Lentil_Reso_saveInt(file, model->nVerticesLength);
+
+    // Position vertices.
+    for (int i = 0; i < model->pVerticesLength; i++) {
+        Lentil_Reso_saveFloat(file, model->pVertices[i].x);
+        Lentil_Reso_saveFloat(file, model->pVertices[i].y);
+        Lentil_Reso_saveFloat(file, model->pVertices[i].z);
+        Lentil_Reso_saveFloat(file, model->pVertices[i].w);
+    }
+
+    // Texture vertices.
+    for (int i = 0; i < model->tVerticesLength; i++) {
+        Lentil_Reso_saveFloat(file, model->tVertices[i].x);
+        Lentil_Reso_saveFloat(file, model->tVertices[i].y);
+        Lentil_Reso_saveFloat(file, model->tVertices[i].w);
+    }
+
+    // Normal vertices.
+    for (int i = 0; i < model->nVerticesLength; i++) {
+        Lentil_Reso_saveFloat(file, model->nVertices[i].x);
+        Lentil_Reso_saveFloat(file, model->nVertices[i].y);
+        Lentil_Reso_saveFloat(file, model->nVertices[i].z);
+    }
+
+    // Triads.
+    for (int i = 0; i < model->groupsLength; i++) {
+        for (int j = 0; j < model->groups[i].facesLength; i++) {
+            for (int k = 0; k < model->groups[i].faces[j].triadsLength; k++) {
+                Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[j].pos);
+                Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[j].tex);
+                Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[j].nor);
+            }
+        }
+    }
 }
 
 // Saving a Lentil_Reso_Model* to a given path on disk - opens a file and then
