@@ -3,7 +3,9 @@
 
 //////////////
 // Includes //
+#include "reso/lntloader.h"
 #include "reso/objloader.h"
+#include "reso/lntsaver.h"
 #include "reso/material.h"
 #include "reso/texture.h"
 #include "reso/shader.h"
