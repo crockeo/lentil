@@ -3,12 +3,20 @@
 //////////////
 // Includes //
 #include <stdlib.h>
+#include <string.h>
 
 #include "../core/debug.h"
 #include "file.h"
 
 //////////
 // Code //
+
+// Checking if a given .lnt file is valid.
+bool Lentil_Reso_validLnt(FILE* file) {
+    char header[7];
+    fgets(header, 7, file);
+    return strcmp(header, "LNTMDL") == 0;
+}
 
 // Loading a Lentil_Reso_Model* from a given file on disk in the .lnt format, a
 // file format made for lentil.
@@ -20,6 +28,15 @@ void Lentil_Reso_loadLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
             printf("Invalid file pointer.\n");
 
         pErr->code = Lentil_Core_FILENOTFOUND;
+        return;
+    }
+
+    // Reading in the header.
+    if (!Lentil_Reso_validLnt(file)) {
+        if (Lentil_Core_debugLevel(-1) > 0)
+            printf("Invalid or corrupted .lnt file.\n");
+
+        pErr->code = Lentil_Core_MODELLOADFAILED;
         return;
     }
 

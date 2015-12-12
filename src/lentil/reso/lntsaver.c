@@ -21,6 +21,9 @@ void Lentil_Reso_saveLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
         return;
     }
 
+    // Printing out the header.
+    fprintf(file, "LNTMDL");
+
     // Writing the groups length.
     Lentil_Reso_saveInt(file, model->groupsLength);
 
