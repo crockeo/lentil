@@ -62,11 +62,11 @@ void Lentil_Reso_saveLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
 
     // Triads.
     for (int i = 0; i < model->groupsLength; i++) {
-        for (int j = 0; j < model->groups[i].facesLength; i++) {
+        for (int j = 0; j < model->groups[i].facesLength; j++) {
             for (int k = 0; k < model->groups[i].faces[j].triadsLength; k++) {
-                Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[j].pos);
-                Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[j].tex);
-                Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[j].nor);
+                Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[k].pos);
+                Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[k].tex);
+                Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[k].nor);
             }
         }
     }
@@ -77,4 +77,7 @@ void Lentil_Reso_saveLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
 void Lentil_Reso_saveLntModelStr(const char* path, Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
     FILE* file = fopen(path, "w");
     Lentil_Reso_saveLntModel(file, model, pErr);
+
+    if (file != NULL)
+        fclose(file);
 }

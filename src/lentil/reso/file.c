@@ -84,7 +84,8 @@ bool Lentil_Reso_loadToken(FILE* file, char* str, int len) {
 
 // IO on a file in a concise form.
 void Lentil_Reso_saveInt(FILE* file, int n) {
-    unsigned char* np = (unsigned char*)&n;
+    unsigned char np[sizeof(int)];
+    memcpy(np, &n, sizeof(int));
     for (int i = 0; i < sizeof(int); i++)
         fputc(np[i], file);
 }
@@ -97,7 +98,8 @@ void Lentil_Reso_loadInt(FILE* file, int* n) {
 }
 
 void Lentil_Reso_saveFloat(FILE* file, float f) {
-    unsigned char* fp = (unsigned char*)&f;
+    unsigned char fp[sizeof(float)];
+    memcpy(fp, &f, sizeof(float));
     for (int i = 0; i < sizeof(f); i++)
         fputc(fp[i], file);
 }
