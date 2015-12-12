@@ -31,15 +31,15 @@ void test_lntio(const char* path, Lentil_Reso_Model* original) {
         return;
     }
 
-    /*Lentil_Reso_Model* new = Lentil_Reso_Model_new();*/
-    /*Lentil_Reso_loadLntModelStr(path, new, &err);*/
-    /*if (Lentil_Core_isError(err)) {*/
-        /*printf("Failed to load new lnt model: %s\n", Lentil_Core_errorName(err));*/
-        /*return;*/
-    /*}*/
+    Lentil_Reso_Model* new = Lentil_Reso_Model_new();
+    Lentil_Reso_loadLntModelStr(path, new, &err);
+    if (Lentil_Core_isError(err)) {
+        printf("Failed to load new lnt model: %s\n", Lentil_Core_errorName(err));
+        return;
+    }
 
     Lentil_Reso_Model_print(original);
-    /*Lentil_Reso_Model_print(new);*/
+    Lentil_Reso_Model_print(new);
 }
 
 // Initializing the game.
