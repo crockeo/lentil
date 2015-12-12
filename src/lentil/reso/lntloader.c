@@ -30,7 +30,7 @@ void Lentil_Reso_loadLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
 
     for (int i = 0; i < model->groupsLength; i++) {
         Lentil_Reso_loadInt(file, &model->groups[i].facesSize);
-        model->groups[i].facesLength = model->groups[i].facesLength;
+        model->groups[i].facesLength = model->groups[i].facesSize;
         model->groups[i].faces       = malloc(model->groups[i].facesSize * sizeof(Lentil_Reso_Model_Face));
     }
 

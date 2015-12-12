@@ -40,6 +40,8 @@ void test_lntio(const char* path, Lentil_Reso_Model* original) {
 
     Lentil_Reso_Model_print(original);
     Lentil_Reso_Model_print(new);
+
+    remove(path);
 }
 
 // Initializing the game.
