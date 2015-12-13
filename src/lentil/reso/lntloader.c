@@ -23,6 +23,9 @@ bool Lentil_Reso_validLnt(FILE* file) {
 //
 // For file spec information, check out the documentation in doc/lntmodel.txt
 void Lentil_Reso_loadLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
+    const int tokenLength = 128;
+    char token[tokenLength];
+
     if (file == NULL) {
         if (Lentil_Core_debugLevel(-1) > 0)
             printf("Invalid file pointer.\n");
@@ -39,6 +42,12 @@ void Lentil_Reso_loadLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
         pErr->code = Lentil_Core_MODELLOADFAILED;
         return;
     }
+
+    // Loading in the material path.
+    Lentil_Reso_loadToken(file, token, tokenLength);
+    model->materialPath = malloc((strlen(token) + 1) * sizeof(char));
+    strcpy(model->materialPath, token);
+    Lentil_Reso_consumeWhitespace(file);
 
     // Allocating space for the groups, faces, and triads.
     Lentil_Reso_loadInt(file, &model->groupsSize);
@@ -121,6 +130,18 @@ void Lentil_Reso_loadLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
     Lentil_Reso_Model_Triad triad;
     int pos, tex, nor;
     for (int i = 0; i < model->groupsLength; i++) {
+        // Getting the group name.
+        Lentil_Reso_loadToken(file, token, tokenLength);
+        model->groups[i].name = malloc((strlen(token) + 1) * sizeof(char));
+        strcpy(model->groups[i].name, token);
+        Lentil_Reso_consumeWhitespace(file);
+
+        // Getting the group material.
+        Lentil_Reso_loadToken(file, token, tokenLength);
+        model->groups[i].material = malloc((strlen(token) + 1) * sizeof(char));
+        strcpy(model->groups[i].material, token);
+        Lentil_Reso_consumeWhitespace(file);
+
         for (int j = 0; j < model->groups[i].facesLength; j++) {
             for (int k = 0; k < model->groups[i].faces[j].triadsLength; k++) {
                 Lentil_Reso_loadInt(file, &pos);

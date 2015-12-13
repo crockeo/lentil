@@ -1,7 +1,8 @@
 The general form of the .lnt model file format follows. It's missing some
 functionality (namely material), but that'll be added in later.
 
-[header (LNTMDL)]
+[header ('LNTMDL')]
+[material path '\n']
 [4 bytes for number of groups (nog)]
 [nog * 4 bytes for number of faces in each group (nof)]
 [nog * nof * 4 bytes for number of triads on each face]
@@ -11,4 +12,4 @@ functionality (namely material), but that'll be added in later.
 [vps * 4 * 4 bytes for each position vertex]
 [vts * 3 * 4 bytes for each texture vertex]
 [vns * 3 * 4 bytes for each normal vertex]
-[nog * nof * not * 3 * 4 bytes for each triad index]
+[nog * [group name~material name]'\n' nof * not * 3 * 4 bytes for each triad index]

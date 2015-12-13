@@ -150,8 +150,10 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
 
             Lentil_Core_addElement(model->nVertices, vertex, Lentil_Reso_Model_NVertex);
         } else if (strcmp(token, "mtllib") == 0) {
-            // TODO: Load a .mtl file.
-            /*Lentil_Reso_loadToken(file, token, tokenSize);*/
+            Lentil_Reso_loadToken(file, token, tokenSize);
+            model->materialPath = malloc(strlen(token + 1) * sizeof(char));
+            strcpy(model->materialPath, token);
+
             /*model->material = Lentil_Reso_loadMaterial(*/
             /*Lentil_Reso_consumeLine(file);*/
         } else if (strcmp(token, "usemtl") == 0) {

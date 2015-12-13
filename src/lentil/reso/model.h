@@ -69,6 +69,7 @@ typedef struct {
 
     bool ownsMaterial;
     Lentil_Reso_Material* material;
+    char* materialPath;
 } Lentil_Reso_Model;
 
 // Creating and returning a new model.

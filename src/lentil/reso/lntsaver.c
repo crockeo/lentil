@@ -24,6 +24,12 @@ void Lentil_Reso_saveLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
     // Printing out the header.
     fprintf(file, "LNTMDL");
 
+    // Printing out the material path.
+    if (model->materialPath == NULL)
+        fprintf(file, "(null)\n");
+    else
+        fprintf(file, "%s\n", model->materialPath);
+
     // Writing the groups length.
     Lentil_Reso_saveInt(file, model->groupsLength);
 
@@ -65,6 +71,8 @@ void Lentil_Reso_saveLntModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
 
     // Triads.
     for (int i = 0; i < model->groupsLength; i++) {
+        fprintf(file, "%s\n%s\n", model->groups[i].name, model->groups[i].material);
+
         for (int j = 0; j < model->groups[i].facesLength; j++) {
             for (int k = 0; k < model->groups[i].faces[j].triadsLength; k++) {
                 Lentil_Reso_saveInt(file, model->groups[i].faces[j].triads[k].pos);

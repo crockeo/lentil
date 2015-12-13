@@ -22,7 +22,8 @@ Lentil_Reso_Model* Lentil_Reso_Model_new() {
     Lentil_Core_initArray(model->groups, Lentil_Reso_Model_Group);
 
     // Initializing the material.
-    model->material = NULL;
+    model->material     = NULL;
+    model->materialPath = NULL;
 
     return model;
 }
@@ -67,9 +68,12 @@ void Lentil_Reso_Model_print(Lentil_Reso_Model* model) {
     for (int i = 0; i < model->nVerticesLength; i++)
         printf(" vn %f %f %f\n", model->nVertices[i].x, model->nVertices[i].y, model->nVertices[i].z);
 
+    // Printing out the material path.
+    printf(" Material path: %s\n", model->materialPath);
+
     // Printing out the groups.
     for (int i = 0; i < model->groupsLength; i++) {
-        printf(" g\n Name : %s\n Mater: %s\n Faces:\n", model->groups[i].name, model->groups[i].material);
+        printf(" g\n  Name : %s\n  Mater: %s\n  Faces:\n", model->groups[i].name, model->groups[i].material);
         for (int j = 0; j < model->groups[i].facesLength; j++) {
             printf("   f");
             for (int k = 0; k < model->groups[i].faces[j].triadsLength; k++)
