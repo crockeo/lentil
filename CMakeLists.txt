@@ -58,23 +58,31 @@ target_link_libraries(lentil-reso lentil-core
                                   ${GLEW_LIBRARIES}
                                   ${PNG_LIBRARIES})
 
-##############
-# Executable #
+###############
+# Executables #
+
+# Primary executable.
 set(EXEC_SOURCES src/lentil/flags.c
                  src/lentil/main.c)
 
 add_executable(lentil ${EXEC_SOURCES})
 
-# Linking external libraries.
 target_link_libraries(lentil ${OPENGL_LIBRARIES}
                              ${GLEW_LIBRARIES}
                              ${GLFW_LIBRARIES}
                              ${PNG_LIBRARIES})
 
-# Linking local libraries.
 target_link_libraries(lentil lentil-core
                              lentil-rend
                              lentil-reso)
+
+# .obj -> .lnt conversion.
+set(CONV_SOURCES src/lentil/converter.c)
+
+add_executable(lentil-converter ${CONV_SOURCES})
+
+target_link_libraries(lentil-converter lentil-core
+                                       lentil-reso)
 
 ################
 # Installation #
