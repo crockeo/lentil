@@ -92,6 +92,9 @@ install(TARGETS lentil-core
                 lentil-reso
         LIBRARY DESTINATION lib)
 
+install(TARGETS lentil-converter
+        RUNTIME DESTINATION bin)
+
 install(DIRECTORY src/lentil/
         DESTINATION include/lentil
         FILES_MATCHING PATTERN *.h)
