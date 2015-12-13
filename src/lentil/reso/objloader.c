@@ -85,7 +85,9 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
     char* token = malloc(tokenSize * sizeof(char));
     do {
         stop = Lentil_Reso_loadToken(file, token, tokenSize);
-        if (strcmp(token, "v") == 0) {
+        if (strcmp(token, "o") == 0) {
+            Lentil_Reso_consumeLine(file);
+        } else if (strcmp(token, "v") == 0) {
             float x, y, z, w;
             int n = fscanf(file, "%f %f %f %f", &x, &y, &z, &w);
             if (n < 3 || n > 4) {
@@ -172,7 +174,7 @@ void Lentil_Reso_loadObjModel(FILE* file, Lentil_Reso_Model* model, Lentil_Core_
             model->groups[currentGroup].material = malloc((slen + 1) * sizeof(char));
             strncpy(model->groups[currentGroup].material, token, slen);
             model->groups[currentGroup].material[slen + 1] = '\0';
-        } else if (strcmp(token, "g") == 0) {
+        } else if (strcmp(token, "g") == 0 || strcmp(token, "s") == 0) {
             // Getting the group name.
             Lentil_Reso_loadToken(file, token, tokenSize);
 
