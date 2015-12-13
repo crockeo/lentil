@@ -22,28 +22,6 @@ bool within(double value, double target, double margin) {
     return value > target - margin && value < target + margin;
 }
 
-// Testing the lntsaver and lntloader to see if they're working.
-void test_lntio(const char* path, Lentil_Reso_Model* original) {
-    Lentil_Core_Error err = Lentil_Core_defaultError();
-    Lentil_Reso_saveLntModelStr(path, original, &err);
-    if (Lentil_Core_isError(err)) {
-        printf("Failed to save lnt model: %s\n", Lentil_Core_errorName(err));
-        return;
-    }
-
-    Lentil_Reso_Model* new = Lentil_Reso_Model_new();
-    Lentil_Reso_loadLntModelStr(path, new, &err);
-    if (Lentil_Core_isError(err)) {
-        printf("Failed to load new lnt model: %s\n", Lentil_Core_errorName(err));
-        return;
-    }
-
-    Lentil_Reso_Model_print(original);
-    Lentil_Reso_Model_print(new);
-
-    remove(path);
-}
-
 // Initializing the game.
 GLFWwindow* initialize() {
     // Initializing GLFW.
@@ -105,8 +83,6 @@ void run(GLFWwindow* window, Lentil_ResConfig cfg) {
     Lentil_Core_Error modelErr = Lentil_Core_defaultError();
     Lentil_Reso_Model* model = Lentil_Reso_Model_new();
     Lentil_Reso_loadObjModelStr(cfg.modelPath, model, &modelErr);
-
-    test_lntio("model.lnt", model);
 
     // Testing a model render.
     Lentil_Core_Error mrErr = Lentil_Core_defaultError();
