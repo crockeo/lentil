@@ -57,6 +57,18 @@ void Lentil_Reso_consumeLine(FILE* file) {
         ungetc(c, file);
 }
 
+// Consuming a chunk of whitespace from within a FILE* (as defined by isspace).
+void Lentil_Reso_consumeWhitespace(FILE* file) {
+    int c;
+    do {
+        c = fgetc(file);
+        if (c == -1)
+            return;
+    } while (isspace(c));
+
+    ungetc(c, file);
+}
+
 // Loading a token into the provided char* from the FILE* with max length
 // defined by the int.
 bool Lentil_Reso_loadToken(FILE* file, char* str, int len) {

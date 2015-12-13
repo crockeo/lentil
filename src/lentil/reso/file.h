@@ -26,6 +26,9 @@ void Lentil_Reso_loadFileContents(FILE*, char**, bool);
 // Consuming input from a FILE* until the EOF, '\n', or '\r' keys are reached.
 void Lentil_Reso_consumeLine(FILE*);
 
+// Consuming a chunk of whitespace from within a FILE* (as defined by isspace).
+void Lentil_Reso_consumeWhitespace(FILE*);
+
 // Loading a token into the provided char* from the FILE* with max length
 // defined by the int.
 //
