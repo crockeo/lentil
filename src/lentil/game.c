@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "rend/modelutils.h"
 #include "reso/objloader.h"
 #include "reso/texture.h"
 #include "reso/shader.h"
@@ -152,6 +153,7 @@
 /*}*/
 
 typedef struct {
+    Lentil_Rend_ModelRender* modelRender;
     Lentil_Reso_Model* model;
     GLuint texture, shader;
 } Lentil_Game;
@@ -194,6 +196,19 @@ Lentil_Game* Lentil_Game_new(Lentil_ResConfig cfg, Lentil_Core_Error* pErr) {
         return NULL;
     }
 
+    game->modelRender = Lentil_Rend_ModelRender_new(game->model, pErr);
+    if (Lentil_Core_isError(*pErr)) {
+        if (Lentil_Core_debugLevel(-1) > 0)
+            printf("Failed to consturct ModelRender.\n");
+
+        Lentil_Reso_Model_destroy(game->model);
+        glDeleteTextures(1, &game->texture);
+        glDeleteProgram(game->shader);
+        free(game);
+
+        return NULL;
+    }
+
     return game;
 }
 
@@ -208,13 +223,13 @@ void Lentil_Game_destroy(Lentil_Game* game) {
 // Updating a game given the time since the last update (to normalize update
 // speed).
 void Lentil_Game_update(Lentil_Game* game, float dt) {
+    // TODO: Update
 }
 
 // Performing a render given the current state of the game.
 void Lentil_Game_render(Lentil_Game* game, GLFWwindow* window) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // TODO: Render
+    Lentil_Rend_ModelRender_render(game->modelRender, game->texture, game->shader);
 }
 
 // Running the main game loop.
