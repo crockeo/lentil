@@ -1,10 +1,14 @@
 #include "camera.h"
 
+//////////////
+// Includes //
+#include <stdlib.h>
+
 //////////
 // Code //
 
 // Constructing a new camera with its position and rotation already defined.
-Lentil_Rend_Camera* Lentil-Rend_Camera_newFull(float x, float y, float z,
+Lentil_Rend_Camera* Lentil_Rend_Camera_newFull(float x, float y, float z,
                                                float xrot, float yrot) {
     Lentil_Rend_Camera* camera = malloc(sizeof(Lentil_Rend_Camera));
 

@@ -14,11 +14,11 @@ typedef struct {
     float x, y, z;
 
     // Rotation of the camera.
-    float rotx, roty;
+    float xrot, yrot;
 } Lentil_Rend_Camera;
 
 // Constructing a new camera with its position and rotation already defined.
-Lentil_Rend_Camera* Lentil-Rend_Camera_newFull(float, float, float, float, float);
+Lentil_Rend_Camera* Lentil_Rend_Camera_newFull(float, float, float, float, float);
 
 // Constructing a new, default camera.
 Lentil_Rend_Camera* Lentil_Rend_Camera_new();
@@ -34,4 +34,6 @@ void Lentil_Rend_Camera_matrix(Lentil_Rend_Camera*, float*);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
