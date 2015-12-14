@@ -34,7 +34,8 @@ add_library(lentil-core SHARED ${CORE_SOURCES})
 
 # Graphical rendering.
 set(REND_SOURCES src/lentil/rend/modelutils.c
-                 src/lentil/rend/buffering.c)
+                 src/lentil/rend/buffering.c
+                 src/lentil/rend/camera.c)
 
 add_library(lentil-rend SHARED ${REND_SOURCES})
 

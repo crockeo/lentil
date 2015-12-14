@@ -4,5 +4,7 @@
 //////////////
 // Includes //
 #include "rend/modelutils.h"
+#include "rend/buffering.h"
+#include "rend/camera.h"
 
 #endif
