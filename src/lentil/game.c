@@ -18,9 +18,9 @@
 // Code //
 
 const static float ROTATION_SPEED     = 50.f;
-const static float ACCELERATION_SPEED = 50.f;
-const static float MIN_SPEED          = 2.f;
-const static float MAX_SPEED          = 100.f;
+const static float ACCELERATION_SPEED = 0.50f;
+const static float MIN_SPEED          = 0.05f;
+const static float MAX_SPEED          = 5.f;
 
 // Checking that a number is within some range about a number.
 float Lentil_within(float num, float target, float variance) {
@@ -118,31 +118,31 @@ void Lentil_Game_update(Lentil_Game* game, GLFWwindow* window, float dt) {
     Lentil_Rend_Camera_rotate(game->modelRender->camera, dxrot, dyrot);
 
     // Translating the camera.
-    float dx = game->dx, dz = game->dz;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        dx -= ACCELERATION_SPEED * dt;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        dx += ACCELERATION_SPEED * dt;
+        game->dx -= ACCELERATION_SPEED * dt;
+    else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        game->dx += ACCELERATION_SPEED * dt;
+    else {
+        if (game->dx > MIN_SPEED)
+            game->dx -= ACCELERATION_SPEED * dt;
+        else if (game->dx < -MIN_SPEED)
+            game->dx += ACCELERATION_SPEED * dt;
+        else
+            game->dx = 0;
+    }
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        dz += ACCELERATION_SPEED * dt;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        dz -= ACCELERATION_SPEED * dt;
-
-    // Deceleration.
-    if (dx == game->dx) {
-        dx += ACCELERATION_SPEED * dt * dx > 0 ? -1 : 1;
-        if (Lentil_within(dx, 0, MIN_SPEED))
-            dx = 0;
+        game->dz += ACCELERATION_SPEED * dt;
+    else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        game->dz -= ACCELERATION_SPEED * dt;
+    else {
+        if (game->dz > MIN_SPEED)
+            game->dz -= ACCELERATION_SPEED * dt;
+        else if (game->dz < -MIN_SPEED)
+            game->dz += ACCELERATION_SPEED * dt;
+        else
+            game->dz = 0;
     }
-
-    if (dz == game->dz) {
-        dz += ACCELERATION_SPEED * dt * dx > 0 ? -1 : 1;
-        if (Lentil_within(dz, 0, MIN_SPEED))
-            dz = 0;
-    }
-
-    game->dx = dx;
-    game->dz = dz;
 
     // Max speed.
     if (game->dx < -MAX_SPEED)

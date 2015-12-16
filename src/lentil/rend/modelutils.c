@@ -70,7 +70,7 @@ void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender* mr, GLuint texture,
     glBindFragDataLocation(shader, 0, "out_color");
 
     // Setting the scale and texture location.
-    glUniform3f(glGetUniformLocation(shader, "camera_location"), mr->camera->x, mr->camera->y, mr->camera->z);
+    glUniform3f(glGetUniformLocation(shader, "camera_position"), mr->camera->x, mr->camera->y, mr->camera->z);
     glUniform2f(glGetUniformLocation(shader, "camera_rotation"), mr->camera->xrot, mr->camera->yrot);
     glUniform2f(glGetUniformLocation(shader, "window_size"), 640, 480);
     glUniform1f(glGetUniformLocation(shader, "scale"), 0.5);

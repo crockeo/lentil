@@ -2,6 +2,7 @@
 
 #define M_PI 3.14159
 
+uniform vec3 camera_position;
 uniform vec2 camera_rotation;
 uniform vec2 window_size;
 uniform float scale;
@@ -42,6 +43,9 @@ void main() {
         pvert.z,
         1 / scale
     );
+
+    // Translating depending on the camera.
+    tpos = vec4(tpos.xyz - camera_position, tpos.w);
 
     // Rotating the matrix.
     tpos *= y_matrix(camera_rotation.x);
