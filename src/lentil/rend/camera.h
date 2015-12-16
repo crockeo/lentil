@@ -23,6 +23,9 @@ Lentil_Rend_Camera* Lentil_Rend_Camera_newFull(float, float, float, float, float
 // Constructing a new, default camera.
 Lentil_Rend_Camera* Lentil_Rend_Camera_new();
 
+// Destroying a camera.
+void Lentil_Rend_Camera_destroy(Lentil_Rend_Camera*);
+
 // Moving the camera in space.
 void Lentil_Rend_Camera_translate(Lentil_Rend_Camera*, float, float, float);
 

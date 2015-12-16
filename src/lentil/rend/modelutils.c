@@ -15,8 +15,7 @@
 Lentil_Rend_ModelRender* Lentil_Rend_ModelRender_new(Lentil_Reso_Model* model, Lentil_Core_Error* pErr) {
     Lentil_Rend_ModelRender* mr = malloc(sizeof(Lentil_Rend_ModelRender));
 
-    mr->xrot = 0;
-    mr->yrot = 0;
+    mr->camera = Lentil_Rend_Camera_new();
 
     mr->count = model->groupsLength;
     mr->vLengths = malloc(mr->count * sizeof(int));
@@ -47,6 +46,8 @@ Lentil_Rend_ModelRender* Lentil_Rend_ModelRender_new(Lentil_Reso_Model* model, L
 
 // Destroying the data contained in a Lentil_Rend_ModelRender.
 void Lentil_Rend_ModelRender_destroy(Lentil_Rend_ModelRender* mr) {
+    Lentil_Rend_Camera_destroy(mr->camera);
+
     glDeleteVertexArrays(mr->count, mr->vaos);
     glDeleteBuffers(mr->count, mr->vbos);
     glDeleteBuffers(mr->count, mr->ebos);
@@ -69,7 +70,8 @@ void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender* mr, GLuint texture,
     glBindFragDataLocation(shader, 0, "out_color");
 
     // Setting the scale and texture location.
-    glUniform2f(glGetUniformLocation(shader, "camera_rotation"), mr->xrot, mr->yrot);
+    glUniform3f(glGetUniformLocation(shader, "camera_location"), mr->camera->x, mr->camera->y, mr->camera->z);
+    glUniform2f(glGetUniformLocation(shader, "camera_rotation"), mr->camera->xrot, mr->camera->yrot);
     glUniform2f(glGetUniformLocation(shader, "window_size"), 640, 480);
     glUniform1f(glGetUniformLocation(shader, "scale"), 0.5);
     glUniform1i(glGetUniformLocation(shader, "tex"), 0);
@@ -96,12 +98,4 @@ void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender* mr, GLuint texture,
             (void*)0
         );
     }
-}
-
-// Updating the rotation and then performing a render.
-void Lentil_Rend_ModelRender_renderRot(Lentil_Rend_ModelRender* mr, GLuint texture, GLuint shader, float xrot, float yrot) {
-    mr->xrot = xrot;
-    mr->yrot = yrot;
-
-    Lentil_Rend_ModelRender_render(mr, texture, shader);
 }

@@ -7,6 +7,7 @@
 
 #include "../core/errors.h"
 #include "../reso/model.h"
+#include "camera.h"
 
 //////////
 // Code //
@@ -18,7 +19,7 @@ extern "C" {
 // A type to store the relevant bindings to vertex arrays / buffers for a given
 // model render.
 typedef struct Lentil_Rend_ModelRender {
-    float xrot, yrot;
+    Lentil_Rend_Camera* camera;
 
     int count;
     int* vLengths;
@@ -36,9 +37,6 @@ void Lentil_Rend_ModelRender_destroy(Lentil_Rend_ModelRender*);
 
 // Performing a render upon the data contained within a Lentil_Rend_ModelRender.
 void Lentil_Rend_ModelRender_render(Lentil_Rend_ModelRender*, GLuint, GLuint);
-
-// Updating the rotation and then performing a render.
-void Lentil_Rend_ModelRender_renderRot(Lentil_Rend_ModelRender*, GLuint, GLuint, float, float);
 
 #ifdef __cplusplus
 }

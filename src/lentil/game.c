@@ -8,6 +8,7 @@
 #include "rend/modelutils.h"
 #include "reso/objloader.h"
 #include "reso/texture.h"
+#include "rend/camera.h"
 #include "reso/shader.h"
 #include "core/debug.h"
 #include "core/sleep.h"
@@ -16,146 +17,23 @@
 //////////
 // Code //
 
-/*// Running the game with the created GLFWwindow.*/
-/*void run(GLFWwindow* window, Lentil_ResConfig cfg) {*/
-    /*// Choosing an appropriate debug level.*/
-    /*Lentil_Core_debugLevel(3);*/
+const static float ROTATION_SPEED     = 50.f;
+const static float ACCELERATION_SPEED = 50.f;
+const static float MIN_SPEED          = 2.f;
+const static float MAX_SPEED          = 100.f;
 
-    /*// Testing a shader load.*/
-    /*Lentil_Core_Error shaderErr = Lentil_Core_defaultError();*/
-    /*GLuint program = Lentil_Reso_loadShaderProgram(cfg.shaderPath, &shaderErr);*/
+// Checking that a number is within some range about a number.
+float Lentil_within(float num, float target, float variance) {
+    return num > target - variance && num > target + variance;
+}
 
-    /*// Testing a texture load.*/
-    /*Lentil_Core_Error textureErr = Lentil_Core_defaultError();*/
-    /*GLuint texture = Lentil_Reso_loadTexture(cfg.texturePath, &textureErr);*/
-
-    /*// Testing a model load.*/
-    /*Lentil_Core_Error modelErr = Lentil_Core_defaultError();*/
-    /*Lentil_Reso_Model* model = Lentil_Reso_Model_new();*/
-    /*Lentil_Reso_loadObjModelStr(cfg.modelPath, model, &modelErr);*/
-
-    /*// Testing a model render.*/
-    /*Lentil_Core_Error mrErr = Lentil_Core_defaultError();*/
-    /*Lentil_Rend_ModelRender* mr = Lentil_Rend_ModelRender_new(model, &mrErr);*/
-
-    /*if (Lentil_Core_isError(shaderErr))*/
-        /*printf("Shader: %s\n", Lentil_Core_errorName(shaderErr));*/
-
-    /*if (Lentil_Core_isError(textureErr))*/
-        /*printf("Texture: %s\n", Lentil_Core_errorName(textureErr));*/
-
-    /*if (Lentil_Core_isError(modelErr))*/
-        /*printf("Model: %s\n", Lentil_Core_errorName(modelErr));*/
-
-    /*if (Lentil_Core_isError(mrErr))*/
-        /*printf("Model Render: %s\n", Lentil_Core_errorName(mrErr));*/
-
-    /*// Running a render loop.*/
-    /*double lt = 0, ct = 0;*/
-    /*GLenum openglError;*/
-    /*glfwSetTime(0);*/
-
-    /*double xrot = 0, yrot = 0;*/
-    /*double xvel = 0, yvel = 0;*/
-
-    /*while (!glfwWindowShouldClose(window)) {*/
-        /*// Getting the delta time since the last time the loop ran.*/
-        /*lt = ct;*/
-        /*ct = glfwGetTime();*/
-
-        /*// Preparing for an update / render.*/
-        /*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
-
-        /*// Rendering.*/
-        /*Lentil_Rend_ModelRender_renderRot(mr, texture, program, xrot, yrot);*/
-
-        /*// Updating the velocity & rotation.*/
-        /*double dt = ct - lt;*/
-        /*bool l, r, u, d;*/
-
-        /*l = glfwGetKey(window, GLFW_KEY_A);*/
-        /*r = glfwGetKey(window, GLFW_KEY_D);*/
-        /*u = glfwGetKey(window, GLFW_KEY_W);*/
-        /*d = glfwGetKey(window, GLFW_KEY_S);*/
-
-        /*if (!l && !r) {*/
-            /*if (within(xvel, 0, MIN_VELOCITY))*/
-                /*xvel = 0;*/
-            /*else if (xvel < 0)*/
-                /*xvel += ROT_ACCEL * dt;*/
-            /*else if (xvel > 0)*/
-                /*xvel -= ROT_ACCEL * dt;*/
-        /*} else {*/
-            /*if (l)*/
-                /*xvel -= ROT_ACCEL * dt;*/
-            /*if (r)*/
-                /*xvel += ROT_ACCEL * dt;*/
-        /*}*/
-
-        /*if (!u && !d) {*/
-            /*if (within(yvel, 0, MIN_VELOCITY))*/
-                /*yvel = 0;*/
-            /*else if (yvel < 0)*/
-                /*yvel += ROT_ACCEL * dt;*/
-            /*else if (yvel > 0)*/
-                /*yvel -= ROT_ACCEL * dt;*/
-        /*} else {*/
-            /*if (u)*/
-                /*yvel -= ROT_ACCEL * dt;*/
-            /*if (d)*/
-                /*yvel += ROT_ACCEL * dt;*/
-        /*}*/
-
-        /*// Capping the velocity at a maximum speed.*/
-        /*if (xvel < -MAX_SPEED)*/
-            /*xvel = -MAX_SPEED;*/
-        /*if (xvel >  MAX_SPEED)*/
-            /*xvel =  MAX_SPEED;*/
-
-        /*if (yvel < -MAX_SPEED)*/
-            /*yvel = -MAX_SPEED;*/
-        /*if (yvel >  MAX_SPEED)*/
-            /*yvel =  MAX_SPEED;*/
-
-        /*xrot += xvel * dt;*/
-        /*while (xrot < 0)*/
-            /*xrot += 360;*/
-        /*while (xrot > 360)*/
-            /*xrot -= 360;*/
-
-        /*yrot += yvel * dt;*/
-        /*while (yrot < 0)*/
-            /*yrot += 360;*/
-        /*while (yrot > 360)*/
-            /*yrot -= 360;*/
-
-        /*// Finishing up an update / render.*/
-        /*if (Lentil_Core_debugLevel(-1) > 0) {*/
-            /*openglError = glGetError();*/
-            /*if (openglError != GL_NO_ERROR) {*/
-                /*printf("OpenGL Error: %d\n", openglError);*/
-                /*break;*/
-            /*}*/
-        /*}*/
-
-        /*if (dt < 1 / 60.0)*/
-            /*Lentil_Core_sleep(1 / 60.0 - dt);*/
-
-        /*glfwSwapBuffers(window);*/
-        /*glfwPollEvents();*/
-    /*}*/
-
-    /*// Cleaning up the allocated resources.*/
-    /*glDeleteProgram(program);*/
-    /*glDeleteTextures(1, &texture);*/
-    /*Lentil_Reso_Model_destroy(model);*/
-    /*Lentil_Rend_ModelRender_destroy(mr);*/
-/*}*/
-
+// The structure of the Lentil game.
 typedef struct {
     Lentil_Rend_ModelRender* modelRender;
     Lentil_Reso_Model* model;
     GLuint texture, shader;
+
+    float dx, dz;
 } Lentil_Game;
 
 // Creating a game.
@@ -209,6 +87,9 @@ Lentil_Game* Lentil_Game_new(Lentil_ResConfig cfg, Lentil_Core_Error* pErr) {
         return NULL;
     }
 
+    game->dx = 0;
+    game->dz = 0;
+
     return game;
 }
 
@@ -222,8 +103,59 @@ void Lentil_Game_destroy(Lentil_Game* game) {
 
 // Updating a game given the time since the last update (to normalize update
 // speed).
-void Lentil_Game_update(Lentil_Game* game, float dt) {
-    // TODO: Update
+void Lentil_Game_update(Lentil_Game* game, GLFWwindow* window, float dt) {
+    // Rotating the camera.
+    float dxrot = 0.f, dyrot = 0.f;
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        dxrot -= ROTATION_SPEED * dt;
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        dxrot += ROTATION_SPEED * dt;
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        dyrot -= ROTATION_SPEED * dt;
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        dyrot += ROTATION_SPEED * dt;
+
+    Lentil_Rend_Camera_rotate(game->modelRender->camera, dxrot, dyrot);
+
+    // Translating the camera.
+    float dx = game->dx, dz = game->dz;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        dx -= ACCELERATION_SPEED * dt;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        dx += ACCELERATION_SPEED * dt;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        dz += ACCELERATION_SPEED * dt;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        dz -= ACCELERATION_SPEED * dt;
+
+    // Deceleration.
+    if (dx == game->dx) {
+        dx += ACCELERATION_SPEED * dt * dx > 0 ? -1 : 1;
+        if (Lentil_within(dx, 0, MIN_SPEED))
+            dx = 0;
+    }
+
+    if (dz == game->dz) {
+        dz += ACCELERATION_SPEED * dt * dx > 0 ? -1 : 1;
+        if (Lentil_within(dz, 0, MIN_SPEED))
+            dz = 0;
+    }
+
+    game->dx = dx;
+    game->dz = dz;
+
+    // Max speed.
+    if (game->dx < -MAX_SPEED)
+        game->dx = -MAX_SPEED;
+    if (game->dx >  MAX_SPEED)
+        game->dx =  MAX_SPEED;
+
+    if (game->dz < -MAX_SPEED)
+        game->dz = -MAX_SPEED;
+    if (game->dz >  MAX_SPEED)
+        game->dz =  MAX_SPEED;
+
+    Lentil_Rend_Camera_translate(game->modelRender->camera, game->dx, 0.f, game->dz);
 }
 
 // Performing a render given the current state of the game.
@@ -246,7 +178,7 @@ void Lentil_runGame(GLFWwindow* window, Lentil_ResConfig cfg, Lentil_Core_Error*
         ct = glfwGetTime();
         dt = ct - lt;
 
-        Lentil_Game_update(game, dt);
+        Lentil_Game_update(game, window, dt);
         Lentil_Game_render(game, window);
 
         if (Lentil_Core_debugLevel(-1)) {

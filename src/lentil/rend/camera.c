@@ -28,6 +28,11 @@ Lentil_Rend_Camera* Lentil_Rend_Camera_new() {
                                       0, 0);
 }
 
+// Destroying a camera.
+void Lentil_Rend_Camera_destroy(Lentil_Rend_Camera* camera) {
+    free(camera);
+}
+
 // Moving the camera in space.
 void Lentil_Rend_Camera_translate(Lentil_Rend_Camera* camera, float dx, float dy, float dz) {
     camera->x += dx;
