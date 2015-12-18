@@ -101,6 +101,28 @@ void Lentil_Game_destroy(Lentil_Game* game) {
     free(game);
 }
 
+// Handling movement in a given direction.
+void Lentil_Game_move(GLFWwindow* window, float dt, float* d, int pkey, int mkey) {
+    if (glfwGetKey(window, pkey) == GLFW_PRESS)
+        (*d) += ACCELERATION_SPEED * dt;
+    else if (glfwGetKey(window, mkey) == GLFW_PRESS)
+        (*d) -= ACCELERATION_SPEED * dt;
+    else {
+        if ((*d) > MIN_SPEED)
+            (*d) -= ACCELERATION_SPEED * dt;
+        else if ((*d) < -MIN_SPEED)
+            (*d) += ACCELERATION_SPEED * dt;
+        else
+            (*d) = 0;
+
+    }
+
+    if ((*d) < -MAX_SPEED)
+        (*d) = -MAX_SPEED;
+    else if ((*d) > MAX_SPEED)
+        (*d) = MAX_SPEED;
+}
+
 // Updating a game given the time since the last update (to normalize update
 // speed).
 void Lentil_Game_update(Lentil_Game* game, GLFWwindow* window, float dt) {
@@ -118,42 +140,8 @@ void Lentil_Game_update(Lentil_Game* game, GLFWwindow* window, float dt) {
     Lentil_Rend_Camera_rotate(game->modelRender->camera, dxrot, dyrot);
 
     // Translating the camera.
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        game->dx -= ACCELERATION_SPEED * dt;
-    else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        game->dx += ACCELERATION_SPEED * dt;
-    else {
-        if (game->dx > MIN_SPEED)
-            game->dx -= ACCELERATION_SPEED * dt;
-        else if (game->dx < -MIN_SPEED)
-            game->dx += ACCELERATION_SPEED * dt;
-        else
-            game->dx = 0;
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        game->dz += ACCELERATION_SPEED * dt;
-    else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        game->dz -= ACCELERATION_SPEED * dt;
-    else {
-        if (game->dz > MIN_SPEED)
-            game->dz -= ACCELERATION_SPEED * dt;
-        else if (game->dz < -MIN_SPEED)
-            game->dz += ACCELERATION_SPEED * dt;
-        else
-            game->dz = 0;
-    }
-
-    // Max speed.
-    if (game->dx < -MAX_SPEED)
-        game->dx = -MAX_SPEED;
-    if (game->dx >  MAX_SPEED)
-        game->dx =  MAX_SPEED;
-
-    if (game->dz < -MAX_SPEED)
-        game->dz = -MAX_SPEED;
-    if (game->dz >  MAX_SPEED)
-        game->dz =  MAX_SPEED;
+    Lentil_Game_move(window, dt, &game->dx, GLFW_KEY_D, GLFW_KEY_A);
+    Lentil_Game_move(window, dt, &game->dz, GLFW_KEY_W, GLFW_KEY_S);
 
     Lentil_Rend_Camera_translate(game->modelRender->camera, game->dx, 0.f, game->dz);
 }
