@@ -64,6 +64,10 @@ GLFWwindow* initialize() {
     glDepthFunc(GL_LEQUAL);
 
     glGetError();
+
+    // Setting up lentil.
+    Lentil_Core_debugLevel(3);
+
     return window;
 }
 
