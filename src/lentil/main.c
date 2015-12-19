@@ -63,6 +63,8 @@ GLFWwindow* initialize() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
     glDepthFunc(GL_LEQUAL);
 
+    glDepthRange(0, 30);
+
     glGetError();
 
     // Setting up lentil.
