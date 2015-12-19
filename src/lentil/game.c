@@ -33,7 +33,7 @@ typedef struct {
     Lentil_Reso_Model* model;
     GLuint texture, shader;
 
-    float dx, dz;
+    float dx, dy, dz;
 } Lentil_Game;
 
 // Creating a game.
@@ -88,6 +88,7 @@ Lentil_Game* Lentil_Game_new(Lentil_ResConfig cfg, Lentil_Core_Error* pErr) {
     }
 
     game->dx = 0;
+    game->dy = 0;
     game->dz = 0;
 
     return game;
@@ -141,9 +142,10 @@ void Lentil_Game_update(Lentil_Game* game, GLFWwindow* window, float dt) {
 
     // Translating the camera.
     Lentil_Game_move(window, dt, &game->dx, GLFW_KEY_D, GLFW_KEY_A);
+    Lentil_Game_move(window, dt, &game->dy, GLFW_KEY_Q, GLFW_KEY_E);
     Lentil_Game_move(window, dt, &game->dz, GLFW_KEY_W, GLFW_KEY_S);
 
-    Lentil_Rend_Camera_translate(game->modelRender->camera, game->dx, 0.f, game->dz);
+    Lentil_Rend_Camera_translate(game->modelRender->camera, game->dx, game->dy, game->dz);
 }
 
 // Performing a render given the current state of the game.
