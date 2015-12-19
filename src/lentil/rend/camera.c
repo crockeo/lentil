@@ -3,6 +3,7 @@
 //////////////
 // Includes //
 #include <stdlib.h>
+#include <math.h>
 
 //////////
 // Code //
@@ -33,6 +34,10 @@ void Lentil_Rend_Camera_destroy(Lentil_Rend_Camera* camera) {
     free(camera);
 }
 
+// Moving the camera in space, with the axes shifted according to the rotation.
+void Lentil_Rend_Camera_translateRot(Lentil_Rend_Camera* camera, float dx, float dy, float dz) {
+}
+
 // Moving the camera in space.
 void Lentil_Rend_Camera_translate(Lentil_Rend_Camera* camera, float dx, float dy, float dz) {
     camera->x += dx;
@@ -43,7 +48,16 @@ void Lentil_Rend_Camera_translate(Lentil_Rend_Camera* camera, float dx, float dy
 // Rotating the camera.
 void Lentil_Rend_Camera_rotate(Lentil_Rend_Camera* camera, float dxrot, float dyrot) {
     camera->xrot += dxrot;
+    if (camera->xrot < 0)
+        camera->xrot += 2 * M_PI;
+    else if (camera->xrot > 2 * M_PI)
+        camera->xrot -= 2 * M_PI;
+
     camera->yrot += dyrot;
+    if (camera->yrot < 0)
+        camera->yrot += 2 * M_PI;
+    else if (camera->yrot > 2 * M_PI)
+        camera->yrot -= 2 * M_PI;
 }
 
 // Filling a 4x4 matrix with the correct matrix for this camera. The float array

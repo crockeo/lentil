@@ -26,6 +26,9 @@ Lentil_Rend_Camera* Lentil_Rend_Camera_new();
 // Destroying a camera.
 void Lentil_Rend_Camera_destroy(Lentil_Rend_Camera*);
 
+// Moving the camera in space, with the axes shifted according to the rotation.
+void Lentil_Rend_Camera_translateRot(Lentil_Rend_Camera*, float, float, float);
+
 // Moving the camera in space.
 void Lentil_Rend_Camera_translate(Lentil_Rend_Camera*, float, float, float);
 

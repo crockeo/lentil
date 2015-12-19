@@ -4,6 +4,7 @@
 // Includes //
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "rend/modelutils.h"
 #include "reso/objloader.h"
@@ -17,7 +18,7 @@
 //////////
 // Code //
 
-const static float ROTATION_SPEED     = 50.f;
+const static float ROTATION_SPEED     = M_PI;
 const static float ACCELERATION_SPEED = 0.50f;
 const static float MIN_SPEED          = 0.05f;
 const static float MAX_SPEED          = 5.f;
@@ -110,9 +111,9 @@ void Lentil_Game_move(GLFWwindow* window, float dt, float* d, int pkey, int mkey
         (*d) -= ACCELERATION_SPEED * dt;
     else {
         if ((*d) > MIN_SPEED)
-            (*d) -= ACCELERATION_SPEED * dt;
+            (*d) -= 2 * ACCELERATION_SPEED * dt;
         else if ((*d) < -MIN_SPEED)
-            (*d) += ACCELERATION_SPEED * dt;
+            (*d) += 2 * ACCELERATION_SPEED * dt;
         else
             (*d) = 0;
 
@@ -130,13 +131,13 @@ void Lentil_Game_update(Lentil_Game* game, GLFWwindow* window, float dt) {
     // Rotating the camera.
     float dxrot = 0.f, dyrot = 0.f;
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        dxrot -= ROTATION_SPEED * dt;
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        dxrot += ROTATION_SPEED * dt;
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         dyrot -= ROTATION_SPEED * dt;
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
         dyrot += ROTATION_SPEED * dt;
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        dxrot -= ROTATION_SPEED * dt;
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        dxrot += ROTATION_SPEED * dt;
 
     Lentil_Rend_Camera_rotate(game->modelRender->camera, dxrot, dyrot);
 

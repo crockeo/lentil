@@ -13,11 +13,6 @@
 //////////
 // Code //
 
-// The speed of rotational acceleration.
-const double MAX_SPEED    = 500.0;
-const double ROT_ACCEL    = 250.0;
-const double MIN_VELOCITY =   0.3;
-
 // Checking if a value is within some margin of another value.
 bool within(double value, double target, double margin) {
     return value > target - margin && value < target + margin;
@@ -63,7 +58,7 @@ GLFWwindow* initialize() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
     glDepthFunc(GL_LEQUAL);
 
-    glDepthRange(0, 30);
+    glDepthRange(0, 1);
 
     glGetError();
 
