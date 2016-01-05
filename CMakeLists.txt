@@ -9,6 +9,7 @@ set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/build/")
 set(LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/build/")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
 ######################
 # External Libraries #
@@ -16,11 +17,13 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(GLFW REQUIRED)
 find_package(PNG REQUIRED)
+find_package(glm REQUIRED)
 
 include_directories(${OPENGL_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_DIRS}
                     ${GLFW_INCLUDE_DIRS}
-                    ${PNG_INCLUDE_DIRS})
+                    ${PNG_INCLUDE_DIRS}
+                    ${GLM_INCLUDE_DIRS})
 
 ######################
 # Internal Libraries #
@@ -61,30 +64,17 @@ target_link_libraries(lentil-reso lentil-core
 
 ###############
 # Executables #
+set(EXEC_SOURCES src/soup/main.cpp)
 
-# Primary executable.
-set(EXEC_SOURCES src/lentil/flags.c
-                 src/lentil/game.c
-                 src/lentil/main.c)
+add_executable(soup ${EXEC_SOURCES})
 
-add_executable(lentil ${EXEC_SOURCES})
+target_link_libraries(soup ${OPENGL_LIBRARIES}
+                           ${GLEW_LIBRARIES}
+                           ${GLFW_LIBRARIES})
 
-target_link_libraries(lentil ${OPENGL_LIBRARIES}
-                             ${GLEW_LIBRARIES}
-                             ${GLFW_LIBRARIES}
-                             ${PNG_LIBRARIES})
-
-target_link_libraries(lentil lentil-core
-                             lentil-rend
-                             lentil-reso)
-
-# .obj -> .lnt conversion.
-set(CONV_SOURCES src/lentil/converter.c)
-
-add_executable(lentil-converter ${CONV_SOURCES})
-
-target_link_libraries(lentil-converter lentil-core
-                                       lentil-reso)
+target_link_libraries(soup lentil-core
+                           lentil-rend
+                           lentil-reso)
 
 ################
 # Installation #
@@ -93,9 +83,6 @@ install(TARGETS lentil-core
                 lentil-rend
                 lentil-reso
         LIBRARY DESTINATION lib)
-
-install(TARGETS lentil-converter
-        RUNTIME DESTINATION bin)
 
 install(DIRECTORY src/lentil/
         DESTINATION include/lentil
