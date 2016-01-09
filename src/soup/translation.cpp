@@ -39,7 +39,7 @@ float TransVec::direction(GLFWwindow* window, float maxSpeed, float minSpeed, fl
 
     if (speed >= -minSpeed && speed <= minSpeed)
          return 0.0;
-    return speed > minSpeed ? -1.0 : 1.0;
+    return speed > 0 ? -1.0 : 1.0;
 }
 
 // Generating a direction vector given the current input states.
@@ -137,9 +137,9 @@ void TransVec::update(GLFWwindow* window, float dt, glm::vec3 rot) {
     glm::vec3 direction = directionVector(window);
     glm::mat3 rotation = rotationalMatrix(rot);
 
-    //direction = rotation * direction;
+    direction = rotation * direction;
     if (instant)
-        vec += direction * maxSpeed;
+        vec += direction * maxSpeed * dt;
     else {
         capSpeeds(direction);
         speed += accelSpeed * direction * dt;
