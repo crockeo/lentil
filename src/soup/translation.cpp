@@ -129,15 +129,13 @@ TransVec::TransVec(float accelSpeed,
                  instant,
                  px, nx,
                  py, ny,
-                 pz, ny) { }
+                 pz, nz) { }
 
 // Updating the TransVec with an explicit set of angles to affect
 // translation.
 void TransVec::update(GLFWwindow* window, float dt, glm::vec3 rot) {
     glm::vec3 direction = directionVector(window);
     glm::mat3 rotation = rotationalMatrix(rot);
-
-    std::cout << direction << std::endl;
 
     //direction = rotation * direction;
     if (instant)
