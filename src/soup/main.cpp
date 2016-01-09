@@ -14,6 +14,8 @@
 #include "../lentil/rend.h"
 #include "../lentil/reso.h"
 
+#include "translation.hpp"
+
 //////////
 // Code //
 
@@ -175,12 +177,6 @@ public:
 ////
 // Game updating and rendering stuff.
 
-// Representing a camera in 3d space.
-struct Camera {
-    glm::vec3 position;
-    glm::vec3 rotation;
-};
-
 // Representing a model to render.
 class ModelRender {
 private:
@@ -257,7 +253,7 @@ public:
     }
 
     // Performing a render with the buffers.
-    void render(GLFWwindow* window, Camera cam) {
+    void render(GLFWwindow* window, glm::vec3 position, glm::vec3 rotation) {
         // Binding the shader.
         glUseProgram(shader.getValue());
 
@@ -268,10 +264,10 @@ public:
 
         // Setting the scale and texture location.
         glUniform3f(glGetUniformLocation(shader.getValue(), "camera_position"),
-                    cam.position.x, cam.position.y, cam.position.z);
+                    position.x, position.y, position.z);
 
         glUniform2f(glGetUniformLocation(shader.getValue(), "cam_rotation"),
-                    cam.rotation.x, cam.rotation.y);
+                    rotation.x, rotation.y);
 
         // THIS IS SO INEFFICIENT WHY DON'T I JUST DO THIS IN A RESIZE CALLBACK
         int width, height;
@@ -311,89 +307,24 @@ public:
 class Game {
 private:
     std::vector<ModelRender*> renders;
-    Camera cam;
-
-    glm::vec3 speed;
-
-    // Constructing a single direction.
-    double direction(GLFWwindow* window, double axis, int pkey, int nkey) const {
-        bool p = glfwGetKey(window, pkey) == GLFW_PRESS,
-             n = glfwGetKey(window, nkey) == GLFW_PRESS;
-
-        if (p && n) { }
-        else if (p) {
-            if (axis < -MIN_SPEED)
-                return 1.7;
-            return 1.0;
-        } else if (n) {
-            if (axis >  MIN_SPEED)
-                return -1.7;;
-            return -1.0;
-        }
-
-        if (axis >  MIN_SPEED)
-            return -1.0;
-        if (axis < -MIN_SPEED)
-            return  1.0;
-
-        return 0.0;
-    }
-
-    // Constructing a direction vector.
-    glm::vec3 directionVector(GLFWwindow* window, glm::vec3 speed) const {
-        return glm::vec3(direction(window, speed.x, GLFW_KEY_D, GLFW_KEY_A),
-                         direction(window, speed.y, GLFW_KEY_Q, GLFW_KEY_E),
-                         direction(window, speed.z, GLFW_KEY_W, GLFW_KEY_S));
-    }
-
-    // Constructing the rotational matrix for movement.
-    glm::mat3 rotationMatrix(glm::vec3 rotation) const {
-        return glm::mat3(
-
-
-        );
-    }
-
-    // Capping the speed (and providing a minimum).
-    glm::vec3 capSpeed(glm::vec3 speed, glm::vec3 dir) const {
-        glm::vec3 capped;
-
-        if (speed.x > -MIN_SPEED && speed.x < MIN_SPEED)
-            capped.x = 0;
-        else if (speed.x >  MAX_SPEED)
-            capped.x =  MAX_SPEED;
-        else if (speed.x < -MAX_SPEED)
-            capped.x = -MAX_SPEED;
-        else
-            capped.x = speed.x;
-
-        if (speed.y > -MIN_SPEED && speed.y < MIN_SPEED)
-            capped.y = 0;
-        else if (speed.y >  MAX_SPEED)
-            capped.y =  MAX_SPEED;
-        else if (speed.y < -MAX_SPEED)
-            capped.y = -MAX_SPEED;
-        else
-            capped.y = speed.y;
-
-        if (speed.z > -MIN_SPEED && speed.z < MIN_SPEED)
-            capped.z = 0;
-        else if (speed.z >  MAX_SPEED)
-            capped.z =  MAX_SPEED;
-        else if (speed.z < -MAX_SPEED)
-            capped.z = -MAX_SPEED;
-        else
-            capped.z = speed.z;
-
-        return capped;
-    }
+    TransVec position, rotation;
 
 public:
     // Constructing a new game.
-    Game() {
-        cam.position = glm::vec3(0);
-        cam.rotation = glm::vec3(0);
-    }
+    Game() :
+            position(ACCEL_SPEED,
+                     MAX_SPEED, MIN_SPEED,
+                     false,
+                     GLFW_KEY_D, GLFW_KEY_A,
+                     GLFW_KEY_Q, GLFW_KEY_E,
+                     GLFW_KEY_S, GLFW_KEY_W),
+
+            rotation(ROT_SPEED,
+                     ROT_SPEED, MIN_SPEED,
+                     true,
+                     GLFW_KEY_UP,   GLFW_KEY_DOWN,
+                     GLFW_KEY_LEFT, GLFW_KEY_RIGHT,
+                     -1,            -1) { }
 
     // Destroying a game.
     ~Game() {
@@ -406,42 +337,14 @@ public:
 
     // Updating the game.
     void update(GLFWwindow* window, double dt) {
-        // Translating the camera.
-        glm::vec3 dir = directionVector(window, speed);
-        speed += ACCEL_VECTOR * dir * glm::vec3(dt) * rotationMatrix(cam.rotation);
-        speed = capSpeed(speed, dir);
-
-        cam.position += speed;
-
-        // Rotating the camera.
-        glm::vec3 drotation;
-        bool u = glfwGetKey(window, GLFW_KEY_UP)   == GLFW_PRESS,
-             d = glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
-        if (u && d) { }
-        else if (u)
-            drotation.x = -ROT_SPEED;
-        else if (d)
-            drotation.x =  ROT_SPEED;
-
-        bool l = glfwGetKey(window, GLFW_KEY_LEFT)  == GLFW_PRESS,
-             r = glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
-        if (l && r) { }
-        else if (l)
-            drotation.y = -ROT_SPEED;
-        else if (r)
-            drotation.y =  ROT_SPEED;
-
-        cam.rotation += drotation * (float)dt;
-        if (cam.rotation.x > 2 * M_PI)
-            cam.rotation.x -= 2 * M_PI;
-        if (cam.rotation.x < 0)
-            cam.rotation.x += 2 * M_PI;
+        position.update(window, dt, rotation.getVec());
+        rotation.update(window, dt);
     }
 
     // Rendering the game.
     void render(GLFWwindow* window) {
         for (auto it = renders.begin(); it != renders.end(); it++)
-            (*it)->render(window, cam);
+            (*it)->render(window, position.getVec(), rotation.getVec());
     }
 };
 

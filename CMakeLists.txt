@@ -64,7 +64,8 @@ target_link_libraries(lentil-reso lentil-core
 
 ###############
 # Executables #
-set(EXEC_SOURCES src/soup/main.cpp)
+set(EXEC_SOURCES src/soup/translation.cpp
+                 src/soup/main.cpp)
 
 add_executable(soup ${EXEC_SOURCES})
 
