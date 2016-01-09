@@ -22,9 +22,9 @@
 ////
 // Some config values.
 const static double ROT_SPEED   = M_PI / 3;
-const static double MAX_SPEED   = 1;
-const static double ACCEL_SPEED = 1;
-const static double MIN_SPEED   = 0.1;
+const static double MAX_SPEED   = 20;
+const static double ACCEL_SPEED = 20;
+const static double MIN_SPEED   = 0.5;
 
 const static glm::vec3 ACCEL_VECTOR = glm::vec3(ACCEL_SPEED, ACCEL_SPEED, ACCEL_SPEED);
 
@@ -317,7 +317,7 @@ public:
                      false,
                      GLFW_KEY_D, GLFW_KEY_A,
                      GLFW_KEY_Q, GLFW_KEY_E,
-                     GLFW_KEY_S, GLFW_KEY_W),
+                     GLFW_KEY_W, GLFW_KEY_S),
 
             rotation(ROT_SPEED,
                      ROT_SPEED, MIN_SPEED,
