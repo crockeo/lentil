@@ -62,21 +62,6 @@ target_link_libraries(lentil-reso lentil-core
                                   ${GLEW_LIBRARIES}
                                   ${PNG_LIBRARIES})
 
-###############
-# Executables #
-set(EXEC_SOURCES src/soup/translation.cpp
-                 src/soup/main.cpp)
-
-add_executable(soup ${EXEC_SOURCES})
-
-target_link_libraries(soup ${OPENGL_LIBRARIES}
-                           ${GLEW_LIBRARIES}
-                           ${GLFW_LIBRARIES})
-
-target_link_libraries(soup lentil-core
-                           lentil-rend
-                           lentil-reso)
-
 ################
 # Installation #
 
