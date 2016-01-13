@@ -35,6 +35,11 @@ set(CORE_SOURCES src/lentil/core/errors.c
 
 add_library(lentil-core SHARED ${CORE_SOURCES})
 
+# Math utilities.
+set(MATH_SOURCES src/lentil/math/vec.c)
+
+add_library(lentil-math SHARED ${MATH_SOURCES})
+
 # Graphical rendering.
 set(REND_SOURCES src/lentil/rend/modelutils.c
                  src/lentil/rend/buffering.c
