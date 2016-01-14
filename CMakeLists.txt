@@ -53,9 +53,7 @@ target_link_libraries(lentil-rend lentil-core
                                   ${PNG_LIBRARIES})
 
 # Resource management.
-set(RESO_SOURCES src/lentil/reso/lntloader.c
-                 src/lentil/reso/objloader.c
-                 src/lentil/reso/lntsaver.c
+set(RESO_SOURCES src/lentil/reso/objloader.c
                  src/lentil/reso/texture.c
                  src/lentil/reso/shader.c
                  src/lentil/reso/model.c
