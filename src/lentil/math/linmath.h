@@ -4,24 +4,26 @@
 #include <math.h>
 
 #define LINMATH_H_DEFINE_VEC(n) \
-typedef float Lentil_Math_Vec##n[n]; \
-static inline void Lentil_Math_Vec##n##_add(Lentil_Math_Vec##n r, Lentil_Math_Vec##n const a, Lentil_Math_Vec##n const b) { \
+typedef float vec##n[n]; \
+static inline void vec##n##_add(vec##n r, vec##n const a, vec##n const b) \
+{ \
 	int i; \
-	for(i = 0; i < n; i++) \
+	for(i=0; i<n; ++i) \
 		r[i] = a[i] + b[i]; \
 } \
-static inline void Lentil_Math_Vec##n##_sub(Lentil_Math_Vec##n r, Lentil_Math_Vec##n const a, Lentil_Math_Vec##n const b) { \
+static inline void vec##n##_sub(vec##n r, vec##n const a, vec##n const b) \
+{ \
 	int i; \
-	for(i = 0; i < n; i++) \
+	for(i=0; i<n; ++i) \
 		r[i] = a[i] - b[i]; \
 } \
-static inline void Lentil_Math_Vec##n##_scale(Lentil_Math_Vec##n r, Lentil_Math_Vec##n const v, float const s) \
+static inline void vec##n##_scale(vec##n r, vec##n const v, float const s) \
 { \
 	int i; \
 	for(i=0; i<n; ++i) \
 		r[i] = v[i] * s; \
 } \
-static inline float Lentil_Math_Vec##n##_mul_inner(Lentil_Math_Vec##n const a, Lentil_Math_Vec##n const b) \
+static inline float vec##n##_mul_inner(vec##n const a, vec##n const b) \
 { \
 	float p = 0.; \
 	int i; \
@@ -29,14 +31,14 @@ static inline float Lentil_Math_Vec##n##_mul_inner(Lentil_Math_Vec##n const a, L
 		p += b[i]*a[i]; \
 	return p; \
 } \
-static inline float Lentil_Math_Vec##n##_len(Lentil_Math_Vec##n const v) \
+static inline float vec##n##_len(vec##n const v) \
 { \
-	return sqrtf(Lentil_Math_Vec##n##_mul_inner(v,v)); \
+	return sqrtf(vec##n##_mul_inner(v,v)); \
 } \
-static inline void Lentil_Math_Vec##n##_norm(Lentil_Math_Vec##n r, Lentil_Math_Vec##n const v) \
+static inline void vec##n##_norm(vec##n r, vec##n const v) \
 { \
-	float k = 1.0 / Lentil_Math_Vec##n##_len(v); \
-	Lentil_Math_Vec##n##_scale(r, v, k); \
+	float k = 1.0 / vec##n##_len(v); \
+	vec##n##_scale(r, v, k); \
 }
 
 LINMATH_H_DEFINE_VEC(2)

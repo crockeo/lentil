@@ -38,6 +38,6 @@ and modified from my [clibgame](http://github.com/crockeo/clibgame).
 
 **Credits to other people:**
 
-* [linmath.h](http://github.com/crockeo/linmath.h) was copied and modified for
-  project scoping in-line with the project per his "DO WHAT THE FUCK YOU WANT
-  PUBLIC LICENSE".
+* [linmath.h](http://github.com/crockeo/linmath.h) was copied to
+  `src/lentil/math` to be used as part of the math library associated with the
+  framework.
