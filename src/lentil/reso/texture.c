@@ -3,6 +3,7 @@
 //////////////
 // Includes //
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <png.h>
 
@@ -99,14 +100,14 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
         return;
     }
 
+    // Reading in the PNG.
     png_init_io(pngPtr, texFile);
     png_set_sig_bytes(pngPtr, PNG_HEADER_SIZE);
+    png_read_png(pngPtr, infoPtr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_EXPAND, NULL);
 
     // Loading info data.
     png_uint_32 width, height;
     int bitDepth, colorType;
-
-    png_read_info(pngPtr, infoPtr);
     png_get_IHDR(
         pngPtr,
         infoPtr,
@@ -119,41 +120,20 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
         NULL
     );
 
-    png_read_update_info(pngPtr, infoPtr);
+    png_bytep* rowPointers = png_get_rows(pngPtr, infoPtr);
+    unsigned int rowBytes = png_get_rowbytes(pngPtr, infoPtr);
 
-    // Allocating space for the png.
-    int rowBytes = png_get_rowbytes(pngPtr, infoPtr);
-    png_byte* imgData = malloc(rowBytes * height * sizeof(png_byte));
-    png_bytep* rowPointers = malloc(height * sizeof(png_bytep));
-
-    if (imgData == NULL || rowPointers == NULL) {
-        png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
-        if (imgData != NULL)
-            free(imgData);
-        if (rowPointers != NULL)
-            free(rowPointers);
-
-        pErr->code = Lentil_Core_PNGLOADFAILED;
-
-        if (Lentil_Core_debugLevel(-1) > 0)
-            printf("Could not allocate image data.\n");
-
-        return;
-    }
-
-    // Starting to load png data.
+    // Copying the data to a usable buffer.
+    GLubyte* imgData = malloc(rowBytes * height);
     for (int i = 0; i < height; i++)
-        rowPointers[height - 1 - i] = imgData + i * rowBytes;
-    png_read_image(pngPtr, rowPointers);
-
-    // Getting the color type of the png.
-    bool alpha = colorType == PNG_COLOR_TYPE_RGB_ALPHA;
+        memcpy(imgData + (rowBytes * (height - i - 1)), rowPointers[i], rowBytes);
 
     // Cleaning up OpenGL errors to make sure we don't get any from other parts
     // of the application.
     glGetError();
 
     // Filling the texture with actual image data.
+    bool alpha = colorType == PNG_COLOR_TYPE_RGB_ALPHA;
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -185,7 +165,6 @@ void Lentil_Reso_populateTexture(FILE* texFile, GLuint texture, Lentil_Core_Erro
     // Cleaning up and returning.
     png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
     free(imgData);
-    free(rowPointers);
 }
 
 // Attempting to load a texture from a given location on disk.
