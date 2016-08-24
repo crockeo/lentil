@@ -13,7 +13,9 @@
 
 // Creating a new, empty Lentil_Reso_Material with a given name.
 Lentil_Reso_Material* Lentil_Reso_Material_new(const char* name) {
-    // TODO: Create an empty material struct.
+    Lentil_Reso_Material* mat = malloc(sizeof(Lentil_Reso_Material));
+    mat->name = name;
+    return mat;
 }
 
 // Creating a new, empty Lentil_Reso_MaterialSet.
@@ -51,6 +53,7 @@ void Lentil_Rest_loadMaterial(FILE* file, Lentil_Reso_MaterialSet* materialSet, 
         memcpy(copy, line, 256);
 
         Lentil_Reso_Material* mat = Lentil_Reso_Material_new(copy);
+        // TODO: Fill this material with information.
         Lentil_Core_addElement(materialSet->materials, mat, Lentil_Reso_Material*);
     }
 }
