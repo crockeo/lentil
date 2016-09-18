@@ -35,7 +35,9 @@ void Lentil_Rend_Camera_destroy(Lentil_Rend_Camera* camera) {
 }
 
 // Moving the camera in space, with the axes shifted according to the rotation.
-void Lentil_Rend_Camera_translateRot(Lentil_Rend_Camera* camera, float dx, float dy, float dz) {
+void Lentil_Rend_Camera_translateRot(Lentil_Rend_Camera* camera, float dx, float dy) {
+    camera->xrot += dx;
+    camera->yrot += dy;
 }
 
 // Moving the camera in space.
